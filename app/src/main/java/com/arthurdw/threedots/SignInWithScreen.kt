@@ -20,7 +20,7 @@ import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.google.android.gms.common.SignInButton
 
 @Composable
-fun SignInWith() {
+fun SignInWith(onSignIn: () -> Unit) {
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -45,13 +45,17 @@ fun SignInWith() {
                 modifier = Modifier.padding(bottom = 100.dp),
                 color = MaterialTheme.colorScheme.background
             ) {
+
                 AndroidView(factory = { context ->
                     SignInButton(context).apply {
                         setSize(SignInButton.SIZE_WIDE)
                         setStyle(SignInButton.COLOR_LIGHT, SignInButton.SIZE_WIDE)
                     }
-                })
-
+                }) { signInButton ->
+                    signInButton.setOnClickListener {
+                        onSignIn()
+                    }
+                }
             }
         }
     }
@@ -61,7 +65,7 @@ fun SignInWith() {
 @Composable
 fun SignInWithPreview() {
     ThreeDotsTheme {
-        SignInWith()
+        SignInWith {}
     }
 }
 
