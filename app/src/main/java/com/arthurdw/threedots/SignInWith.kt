@@ -23,37 +23,35 @@ import com.google.android.gms.common.SignInButton
 fun SignInWith() {
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
 
-    ThreeDotsTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Surface(
+                modifier = Modifier.padding(bottom = 25.dp)
             ) {
-                Surface(
-                    modifier = Modifier.padding(bottom = 25.dp)
-                ) {
-                    Image(
-                        painter = icon,
-                        contentDescription = "Icon",
-                        modifier = Modifier
-                            .size(350.dp)
-                            .background(color = MaterialTheme.colorScheme.background)
-                    )
-                }
+                Image(
+                    painter = icon,
+                    contentDescription = "Icon",
+                    modifier = Modifier
+                        .size(350.dp)
+                        .background(color = MaterialTheme.colorScheme.background)
+                )
+            }
 
-                Surface(
-                    modifier = Modifier.padding(bottom = 100.dp),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    AndroidView(factory = { context ->
-                        SignInButton(context).apply {
-                            setSize(SignInButton.SIZE_WIDE)
-                            setStyle(SignInButton.COLOR_LIGHT, SignInButton.SIZE_WIDE)
-                        }
-                    })
+            Surface(
+                modifier = Modifier.padding(bottom = 100.dp),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                AndroidView(factory = { context ->
+                    SignInButton(context).apply {
+                        setSize(SignInButton.SIZE_WIDE)
+                        setStyle(SignInButton.COLOR_LIGHT, SignInButton.SIZE_WIDE)
+                    }
+                })
 
-                }
             }
         }
     }
