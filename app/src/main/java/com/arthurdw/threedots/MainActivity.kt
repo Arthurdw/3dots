@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             })
                         }
                         composable(Screens.Overview.route) {
-                            OverviewScreen(navController)
+                            OverviewScreen()
                         }
                     }
                 }

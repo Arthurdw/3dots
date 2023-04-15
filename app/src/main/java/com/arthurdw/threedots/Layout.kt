@@ -1,6 +1,5 @@
 package com.arthurdw.threedots
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -76,17 +75,34 @@ fun QuickNav() {
 }
 
 @Composable
-fun SideNav(onOpen: () -> Unit) {
-    Image(
-        painterResource(R.drawable.ic_nav),
-        "Show more navigation",
-        modifier = Modifier
-            .padding(top = 30.dp, start = 30.dp)
-            .width(50.dp)
-            .height(50.dp)
-            .clickable { onOpen() },
-        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-    )
+fun SideNav(title: String? = null, onOpen: () -> Unit) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+
+    Row(
+        modifier = Modifier.padding(top = 30.dp, start = 30.dp)
+    ) {
+        Image(
+            painterResource(R.drawable.ic_nav),
+            "Show more navigation",
+            modifier = Modifier
+                .width(50.dp)
+                .height(50.dp)
+                .clickable { onOpen() },
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+        )
+
+        if (title != null) {
+            Text(
+                title,
+                modifier = Modifier
+                    .width(screenWidth - 160.dp)
+                    .padding(top = 20.dp),
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Composable
@@ -176,12 +192,12 @@ fun Sidebar(onClose: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThreeDotsLayout(content: @Composable () -> Unit) {
+fun ThreeDotsLayout(title: String? = null, content: @Composable () -> Unit) {
     val isSidebarOpen = remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Scaffold(topBar = {
-            SideNav { isSidebarOpen.value = true }
+            SideNav(title) { isSidebarOpen.value = true }
         }, bottomBar = { QuickNav() }, content = {
             Surface(
                 color = MaterialTheme.colorScheme.background,
@@ -201,7 +217,7 @@ fun ThreeDotsLayout(content: @Composable () -> Unit) {
 @Composable
 fun ThreeDotsLayoutPreview() {
     ThreeDotsTheme {
-        ThreeDotsLayout {
+        ThreeDotsLayout(title = "Hello world!") {
             Text(text = "Hello World!")
         }
     }
