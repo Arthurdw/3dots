@@ -72,8 +72,8 @@ fun Dot(isEmpty: Boolean = false, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun UnlockDots(amount: Int) {
-    Row {
+fun UnlockDots(amount: Int, modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
         repeat(amount) { Dot(false) }
         repeat(5 - amount) { Dot(true) }
     }
@@ -82,11 +82,11 @@ fun UnlockDots(amount: Int) {
 
 @Composable
 fun Unlock(text: String?) {
-    val icon = painterResource(id = R.drawable.ic_launcher_foreground)
+    val icon = painterResource(id = R.drawable.ic_dots)
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(top = 50.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -94,27 +94,34 @@ fun Unlock(text: String?) {
                 painter = icon,
                 contentDescription = "Icon",
                 modifier = Modifier
-                    .size(350.dp)
-                    .background(color = MaterialTheme.colorScheme.background)
-            )
+                    .size(200.dp)
+                    .background(color = MaterialTheme.colorScheme.background),
+
+                )
 
             if (text != null) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 20.dp)
                 )
             }
 
-            UnlockDots(3)
 
-            Surface(
-                modifier = Modifier
-                    .padding(top = 100.dp)
-                    .width(300.dp),
-                color = MaterialTheme.colorScheme.background,
+            Column(
+                modifier = Modifier.padding(top = 100.dp, bottom = 50.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                UnlockKeyboard()
+                UnlockDots(3)
+
+                Box(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .width(300.dp),
+                ) {
+                    UnlockKeyboard()
+                }
             }
         }
     }
