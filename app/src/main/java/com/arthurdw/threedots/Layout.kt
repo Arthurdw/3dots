@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -45,10 +47,9 @@ fun QuickNav() {
     }
 
 
-    Box (modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = Modifier.fillMaxWidth()) {
         Divider(
-            thickness = 4.dp,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.12f)
+            thickness = 4.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.12f)
         )
         Row(
             modifier = Modifier
@@ -64,13 +65,21 @@ fun QuickNav() {
     }
 }
 
+@Composable
+fun SideNav() {
+    Image(
+        painterResource(R.drawable.ic_nav),
+        "Show more navigation",
+        modifier = Modifier.padding(top = 30.dp, start = 30.dp).width(50.dp).height(50.dp),
+        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThreeDotsLayout(content: @Composable () -> Unit) {
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
-        Scaffold(bottomBar = {
-            QuickNav()
-        }, content = {
+        Scaffold(topBar = { SideNav() }, bottomBar = { QuickNav() }, content = {
             Surface(
                 color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
