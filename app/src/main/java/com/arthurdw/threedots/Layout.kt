@@ -1,5 +1,6 @@
 package com.arthurdw.threedots
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -117,7 +118,7 @@ fun Sidebar(onClose: () -> Unit) {
 
     Row(
         modifier = Modifier
-            .height(screenHeight - 99.dp)
+            .height(screenHeight - 124.dp)
             .background(MaterialTheme.colorScheme.background)
             .zIndex(1000f)
     ) {
@@ -128,12 +129,12 @@ fun Sidebar(onClose: () -> Unit) {
                 .fillMaxWidth(0.75f),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            NavIcon(R.drawable.ic_exit,
+            NavIcon(
+                R.drawable.ic_exit,
                 "Close",
-                {},
-                modifier = Modifier
-                    .padding(top = 16.dp, start = 16.dp)
-                    .clickable { onClose() })
+                onClose,
+                modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+            )
 
             Column {
                 val navItems = listOf("Home", "Stocks", "News", "Share", "Scan")

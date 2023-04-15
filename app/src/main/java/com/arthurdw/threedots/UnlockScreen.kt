@@ -107,6 +107,7 @@ fun Unlock(text: String?, onSuccess: () -> Unit = {}) {
 
         if (joined == "11111") {
             onSuccess()
+            insertedState.clear()
         } else {
             insertedState.clear()
         }
