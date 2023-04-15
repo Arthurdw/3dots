@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 
 enum class Screens(val route: String) {
-    SignInWith("sign_in_with"), Unlock("unlock")
+    SignInWith("sign_in_with"), Unlock("unlock"), Overview("overview")
 }
 
 class MainActivity : ComponentActivity() {
@@ -29,16 +29,19 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    NavHost(navController, startDestination = Screens.SignInWith.name) {
-                        composable(Screens.SignInWith.name) {
+                    NavHost(navController, startDestination = Screens.SignInWith.route) {
+                        composable(Screens.SignInWith.route) {
                             SignInWith(onSignIn = {
-                                navController.navigate(Screens.Unlock.name)
+                                navController.navigate(Screens.Unlock.route)
                             })
                         }
-                        composable(Screens.Unlock.name) {
+                        composable(Screens.Unlock.route) {
                             Unlock(text = "Welcome back, Arthur!", onSuccess = {
-                                // TODO: Navigate to the next screen
+                                navController.navigate(Screens.Overview.route)
                             })
+                        }
+                        composable(Screens.Overview.route) {
+                            OverviewScreen()
                         }
                     }
                 }
