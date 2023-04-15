@@ -36,7 +36,9 @@ class MainActivity : ComponentActivity() {
                             })
                         }
                         composable(Screens.Unlock.name) {
-                            Unlock(text = "Welcome back, Arthur!")
+                            Unlock(text = "Welcome back, Arthur!", onSuccess = {
+                                // TODO: Navigate to the next screen
+                            })
                         }
                     }
                 }
