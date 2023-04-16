@@ -1,9 +1,12 @@
 package com.arthurdw.threedots.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,9 +27,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
@@ -35,6 +42,8 @@ import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Ripple
 import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.toDateString
+import java.lang.Float.min
 
 @Composable
 fun NewsItemRepresentation(
@@ -42,20 +51,47 @@ fun NewsItemRepresentation(
 ) {
     val painter = rememberAsyncImagePainter(item.imageUrl)
     val state = painter.state
+    val context = LocalContext.current
 
     val transition by animateFloatAsState(
-        targetValue = if (state is AsyncImagePainter.State.Success) 1f else 0f
+        targetValue = if (state !is AsyncImagePainter.State.Loading) 1f else 0f
     )
 
     Log.d("3dot", "NewsItemRepresentation: ${painter.state is AsyncImagePainter.State.Loading}")
     Log.d("3dot", "NewsItemRepresentation 2: ${painter.state is AsyncImagePainter.State.Success}")
     Log.d("3dot", "NewsItemRepresentation 3: ${painter.state}")
 
+    @Composable
+    fun ArticleDetails() {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = item.source,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.width(100.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = item.date.toDateString(),
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.width(100.dp)
+        )
+    }
+
     Box(
         modifier = Modifier
             .fillMaxWidth(0.9f)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-            .padding(16.dp),
+            .background(
+                MaterialTheme.colorScheme.surface.copy(alpha = transition),
+                RoundedCornerShape(12.dp)
+            )
+            .padding(16.dp)
+            .scale(.8f + (.2f * transition))
+            .graphicsLayer { rotationX = (1f - transition) * 5f }
+            .alpha(min(1f, transition / .2f))
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url))
+                context.startActivity(intent)
+            },
     ) {
         Row(
             horizontalArrangement = Arrangement.Center
@@ -68,19 +104,12 @@ fun NewsItemRepresentation(
                     Image(
                         modifier = Modifier
                             .size(100.dp)
-                            .clip(RectangleShape),
+                            .clip(RoundedCornerShape(12.dp)),
                         painter = painter,
                         contentDescription = "Image fitting to article",
                         contentScale = ContentScale.Crop,
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = item.source,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .clip(RectangleShape)
-                    )
+                    ArticleDetails()
                 }
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -96,15 +125,7 @@ fun NewsItemRepresentation(
                     modifier = Modifier
                         .clip(RectangleShape)
                 )
-                if (state is AsyncImagePainter.State.Error) {
-                    Text(
-                        text = item.source,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier
-                            .width(100.dp)
-                            .clip(RectangleShape)
-                    )
-                }
+                if (state is AsyncImagePainter.State.Error) ArticleDetails()
             }
         }
     }
@@ -119,7 +140,7 @@ fun NewsScreen() {
             title = "Top 7 valued firms together add ₹ 67,859.77 cr in Mcap; check list here",
             snippet = "A total of seven firms, out of the top 10 most valuable companies, together added ₹67,859.77 crore in market valuation in a holiday-shortened last week, with ...",
             url = "https://www.livemint.com/news/india/top-7-valued-firms-together-add-rs-67-859-77-cr-in-mcap-check-list-here-11681623243289.html",
-            imageUrl = "https://www.livemint.com/lm-img/img/2023/04/16/600x338/ICICI_Bank_1681624374093_1681624374296_1681624374296.jpg",
+            imageUrl = "httpps://www.livemint.com/lm-img/img/2023/04/16/600x338/ICICI_Bank_1681624374093_1681624374296_1681624374296.jpg",
             source = "livemint.com",
             dateStr = "2023-04-16T05:56:31.000000Z"
         ),
@@ -170,6 +191,7 @@ fun NewsScreen() {
 @Composable
 fun NewsScreenPreview() {
     PreviewWrapper {
+        Text("WARNING: This screen does not support previewing. Please run the app to see the screen.")
         NewsScreen()
     }
 }
