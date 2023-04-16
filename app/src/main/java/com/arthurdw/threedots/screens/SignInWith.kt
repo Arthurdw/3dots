@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.Screens
-import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
+import com.arthurdw.threedots.utils.PreviewWrapper
 import com.google.android.gms.common.SignInButton
 
 @Composable
@@ -68,7 +68,7 @@ fun SignInWith() {
 @Preview(showBackground = true)
 @Composable
 fun SignInWithPreview() {
-    ThreeDotsTheme {
+    PreviewWrapper {
         SignInWith()
     }
 }

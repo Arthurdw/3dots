@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,8 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
+import com.arthurdw.threedots.utils.PreviewWrapper
 
 @Composable
 fun QuickNav() {
@@ -47,12 +48,13 @@ fun QuickNav() {
         label: String,
         selected: Boolean,
         onClick: () -> Unit,
-        changeColor: Boolean = true
+        changeColor: Boolean = true,
     ) {
         val painter = painterResource(icon)
         Image(painter,
             label,
             modifier = Modifier
+                .size(60.dp)
                 .clickable { onClick() }
                 .graphicsLayer(alpha = if (selected) 1f else 0.75f),
             colorFilter = if (changeColor) ColorFilter.tint(MaterialTheme.colorScheme.primary) else null)
@@ -81,7 +83,7 @@ fun QuickNav() {
                 "Home",
                 true,
                 { navController.navigate(Screens.Overview.route) },
-                changeColor = false
+                changeColor = false,
             )
             NavItem(
                 R.drawable.ic_news,
@@ -264,7 +266,7 @@ fun ThreeDotsLayout(title: String? = null, content: @Composable () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun ThreeDotsLayoutPreview() {
-    ThreeDotsTheme {
+    PreviewWrapper {
         ThreeDotsLayout(title = "Hello world!") {
             Text(text = "Hello World!")
         }

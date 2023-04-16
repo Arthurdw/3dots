@@ -23,8 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.data.objects.BasicStock
-import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
+import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toCurrencyString
 import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
@@ -154,7 +154,7 @@ fun OverviewScreen() {
 @Preview(showBackground = true)
 @Composable
 fun OverviewScreenPreview() {
-    ThreeDotsTheme {
+    PreviewWrapper {
         OverviewScreen()
     }
 }
