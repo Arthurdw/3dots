@@ -13,12 +13,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.arthurdw.threedots.screens.NewsScreen
+import com.arthurdw.threedots.screens.OverviewScreen
 import com.arthurdw.threedots.screens.PickScreen
 import com.arthurdw.threedots.screens.ScanScreen
 import com.arthurdw.threedots.screens.SettingsScreen
 import com.arthurdw.threedots.screens.ShareScreen
+import com.arthurdw.threedots.screens.SignInWith
 import com.arthurdw.threedots.screens.StockDetailsScreen
 import com.arthurdw.threedots.screens.StocksScreen
+import com.arthurdw.threedots.screens.Unlock
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
 

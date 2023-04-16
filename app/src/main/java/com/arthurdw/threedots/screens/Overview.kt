@@ -1,4 +1,4 @@
-package com.arthurdw.threedots
+package com.arthurdw.threedots.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.ui.theme.rememberChartStyle

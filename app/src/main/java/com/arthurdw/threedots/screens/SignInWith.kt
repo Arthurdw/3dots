@@ -1,4 +1,4 @@
-package com.arthurdw.threedots
+package com.arthurdw.threedots.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.arthurdw.threedots.R
+import com.arthurdw.threedots.Screens
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
 import com.google.android.gms.common.SignInButton
