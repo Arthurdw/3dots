@@ -105,6 +105,7 @@ fun Unlock(text: String?, onSuccess: () -> Unit = {}) {
     if (insertedState.size == 5) {
         val joined = insertedState.joinToString("")
 
+        // TODO: Check for hash
         if (joined == "11111") {
             onSuccess()
             insertedState.clear()

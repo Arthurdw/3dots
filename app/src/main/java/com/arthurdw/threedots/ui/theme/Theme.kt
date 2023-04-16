@@ -21,6 +21,7 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = ShinyShamrock,
     background = DarkJungleGreen,
     onBackground = Gainsboro,
+    surface = MyrtleGreen
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -29,6 +30,7 @@ private val LightColorScheme = lightColorScheme(
     tertiary = ShinyShamrock,
     background = DarkJungleGreen,
     onBackground = Gainsboro,
+    surface = MyrtleGreen
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

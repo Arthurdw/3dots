@@ -17,11 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
+import com.arthurdw.threedots.utils.LocalNavController
 import com.google.android.gms.common.SignInButton
 
 @Composable
-fun SignInWith(onSignIn: () -> Unit) {
+fun SignInWith() {
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
+    val navController = LocalNavController.current
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
@@ -53,7 +55,7 @@ fun SignInWith(onSignIn: () -> Unit) {
                     }
                 }) { signInButton ->
                     signInButton.setOnClickListener {
-                        onSignIn()
+                        navController.navigate(Screens.Unlock.route)
                     }
                 }
             }

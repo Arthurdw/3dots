@@ -35,9 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
+import com.arthurdw.threedots.utils.LocalNavController
 
 @Composable
 fun QuickNav() {
+    val navController = LocalNavController.current
+
     @Composable
     fun NavItem(
         @DrawableRes icon: Int,
@@ -67,9 +70,19 @@ fun QuickNav() {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NavItem(R.drawable.ic_stocks, "Stocks", false, {})
-            NavItem(R.drawable.ic_dots, "Home", true, {}, changeColor = false)
-            NavItem(R.drawable.ic_news, "News", false, {})
+            NavItem(R.drawable.ic_stocks, "Stocks", false, { })
+            NavItem(
+                R.drawable.ic_dots,
+                "Home",
+                true,
+                { navController.navigate(Screens.Overview.route) },
+                changeColor = false
+            )
+            NavItem(
+                R.drawable.ic_news,
+                "News",
+                false,
+                { navController.navigate(Screens.News.route) })
         }
     }
 }

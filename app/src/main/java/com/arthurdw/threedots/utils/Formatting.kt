@@ -14,6 +14,7 @@ internal fun Float.toCurrencyString(): String {
     return currencyFormatter.format(this)
 }
 
-internal fun Double.toCurrencyString(): String {
-    return currencyFormatter.format(this)
+internal fun Float.toPercentageString(): String {
+    val prefix = if (this > 0) "+" else ""
+    return "$prefix${this}%"
 }
