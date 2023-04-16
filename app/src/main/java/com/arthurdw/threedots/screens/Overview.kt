@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.data.objects.BasicStock
-import com.arthurdw.threedots.ui.theme.MyrtleGreen
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.toCurrencyString
@@ -110,12 +109,12 @@ fun OverviewScreen() {
     )
 
     val pickedStocks = listOf(
-        BasicStock("Apple", "APL", 15 * 168.56f, 15 * 121.4f),
+        BasicStock("Apple", "AAPL", 15 * 168.56f, 15 * 121.4f),
         BasicStock("Alphabet", "GOOGL", 15 * 93.65f, 15 * 86.7f),
     )
 
     val followedStocks = listOf(
-        BasicStock("Apple", "APL", 168.56f, 161.4f),
+        BasicStock("Apple", "AAPL", 168.56f, 161.4f),
         BasicStock("Alphabet", "GOOGL", 93.65f, 101.7f),
     )
 

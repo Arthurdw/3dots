@@ -13,11 +13,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.arthurdw.threedots.screens.PickScreen
+import com.arthurdw.threedots.screens.ScanScreen
+import com.arthurdw.threedots.screens.SettingsScreen
+import com.arthurdw.threedots.screens.ShareScreen
+import com.arthurdw.threedots.screens.StockDetailsScreen
+import com.arthurdw.threedots.screens.StocksScreen
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
 
 enum class Screens(val route: String) {
-    SignInWith("sign_in_with"), Unlock("unlock"), Overview("overview"), News("news")
+    SignInWith("sign_in_with"),
+    Unlock("unlock"),
+    Overview("overview"),
+    News("news"),
+    Stocks("stocks"),
+    StockDetails("stock_details"),
+    Share("share"),
+    Settings("settings"),
+    Scan("scan"),
+    Pick("pick"),
 }
 
 class MainActivity : ComponentActivity() {
@@ -34,20 +49,20 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         NavHost(navController, startDestination = Screens.SignInWith.route) {
-                            composable(Screens.SignInWith.route) {
-                                SignInWith()
-                            }
+                            composable(Screens.SignInWith.route) { SignInWith() }
                             composable(Screens.Unlock.route) {
                                 Unlock(text = "Welcome back, Arthur!", onSuccess = {
                                     navController.navigate(Screens.Overview.route)
                                 })
                             }
-                            composable(Screens.Overview.route) {
-                                OverviewScreen()
-                            }
-                            composable(Screens.News.route) {
-                                NewsScreen()
-                            }
+                            composable(Screens.Overview.route) { OverviewScreen() }
+                            composable(Screens.News.route) { NewsScreen() }
+                            composable(Screens.Stocks.route) { StocksScreen() }
+                            composable(Screens.StockDetails.route) { StockDetailsScreen("AAPL") }
+                            composable(Screens.Share.route) { ShareScreen() }
+                            composable(Screens.Settings.route) { SettingsScreen() }
+                            composable(Screens.Scan.route) { ScanScreen() }
+                            composable(Screens.Pick.route) { PickScreen() }
                         }
                     }
                 }

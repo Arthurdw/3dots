@@ -67,7 +67,7 @@ fun SignInWith() {
 @Composable
 fun SignInWithPreview() {
     ThreeDotsTheme {
-        SignInWith {}
+        SignInWith()
     }
 }
 

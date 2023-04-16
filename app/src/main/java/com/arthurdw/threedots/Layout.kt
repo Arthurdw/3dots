@@ -70,7 +70,12 @@ fun QuickNav() {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            NavItem(R.drawable.ic_stocks, "Stocks", false, { })
+            NavItem(
+                R.drawable.ic_stocks,
+                "Stocks",
+                false,
+                { navController.navigate(Screens.Stocks.route) }
+            )
             NavItem(
                 R.drawable.ic_dots,
                 "Home",
@@ -82,7 +87,8 @@ fun QuickNav() {
                 R.drawable.ic_news,
                 "News",
                 false,
-                { navController.navigate(Screens.News.route) })
+                { navController.navigate(Screens.News.route) }
+            )
         }
     }
 }
@@ -131,15 +137,28 @@ fun VerticalDivider(modifier: Modifier = Modifier) {
 fun Sidebar(onClose: () -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
+    val navController = LocalNavController.current
+
+    data class NavItem(val text: String, val screen: Screens)
 
     @Composable
     fun NavIcon(
-        @DrawableRes icon: Int, label: String, onClick: () -> Unit, modifier: Modifier = Modifier
+        @DrawableRes icon: Int,
+        label: String,
+        screen: Screens? = null,
+        modifier: Modifier = Modifier,
+        onClick: () -> Unit = {}
     ) {
         Image(painterResource(icon),
             label,
             modifier = modifier
-                .clickable { onClick() }
+                .clickable {
+                    onClick()
+                    if (screen != null) {
+                        navController.navigate(screen.route)
+                    }
+                    onClose()
+                }
                 .width(50.dp)
                 .height(50.dp),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary))
@@ -161,17 +180,27 @@ fun Sidebar(onClose: () -> Unit) {
             NavIcon(
                 R.drawable.ic_exit,
                 "Close",
-                onClose,
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp)
             )
 
             Column {
-                val navItems = listOf("Home", "Stocks", "News", "Share", "Scan")
+                val navItems = listOf(
+                    NavItem("Home", Screens.Overview),
+                    NavItem("Stocks", Screens.Stocks),
+                    NavItem("News", Screens.News),
+                    NavItem("Share", Screens.Share),
+                    NavItem("Scan", Screens.Scan)
+                )
 
                 navItems.forEach {
                     Text(
-                        it,
-                        modifier = Modifier.fillMaxWidth(),
+                        it.text,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(it.screen.route)
+                                onClose()
+                            },
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyLarge
                     )
@@ -187,11 +216,17 @@ fun Sidebar(onClose: () -> Unit) {
                 NavIcon(
                     R.drawable.ic_settings,
                     "Settings",
-                    {},
+                    Screens.Settings,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 NavIcon(
-                    R.drawable.ic_logout, "Logout", {}, modifier = Modifier.padding(bottom = 16.dp)
+                    R.drawable.ic_logout,
+                    "Logout",
+                    Screens.SignInWith,
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    onClick = {
+                        // TODO: Logout
+                    }
                 )
             }
         }
