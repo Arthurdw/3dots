@@ -34,14 +34,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Ripple
 import com.arthurdw.threedots.data.objects.NewsItem
-import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toDateString
 import java.lang.Float.min
 
@@ -184,14 +182,5 @@ fun NewsScreen() {
                 NewsItemRepresentation(it)
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NewsScreenPreview() {
-    PreviewWrapper {
-        Text("WARNING: This screen does not support previewing. Please run the app to see the screen.")
-        NewsScreen()
     }
 }
