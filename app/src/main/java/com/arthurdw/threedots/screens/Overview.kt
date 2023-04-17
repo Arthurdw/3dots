@@ -21,10 +21,12 @@ import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toCurrencyString
-import com.patrykandpatrick.vico.compose.axis.vertical.startAxis
+import com.patrykandpatrick.vico.compose.axis.vertical.endAxis
 import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
+import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.entryModelOf
 
 @Composable
@@ -55,11 +57,14 @@ fun StocksSection(title: String, data: List<BasicStock>, modifier: Modifier = Mo
     }
 }
 
+
 @Composable
 fun OverviewScreen() {
-    val worth = entryModelOf(
-        100000f, 80000f, 110000f, 132500f, 105000f, 117500f, 140000f, 122500f
+    val worthData = listOf(
+        107423f, 102772f, 104625f, 108720f, 111021f, 105459f, 108591f, 119075f, 117689f, 110650f,
+        115683f, 124708f, 118317f,
     )
+    val worth = entryModelOf(*worthData.toTypedArray())
 
     val pickedStocks = listOf(
         BasicStock("Alphabet", "GOOGL", 15 * 93.65f, 15 * 86.7f),
@@ -88,10 +93,16 @@ fun OverviewScreen() {
         ) {
             ProvideChartStyle(rememberChartStyle()) {
                 Chart(
-                    chart = lineChart(),
+                    chart = lineChart(
+                        axisValuesOverrider = AxisValuesOverrider.fixed(
+                            minY = worthData.min(),
+                            maxY = worthData.max()
+                        )
+                    ),
                     model = worth,
-                    startAxis = startAxis(),
+                    endAxis = endAxis(),
                     modifier = Modifier.fillMaxWidth(0.9f),
+                    chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
                 )
             }
 

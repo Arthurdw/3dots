@@ -66,3 +66,5 @@ fun Stock(stock: BasicStock, modifier: Modifier = Modifier) {
         }
     }
 }
+
+
