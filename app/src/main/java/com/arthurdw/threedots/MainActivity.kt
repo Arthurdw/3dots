@@ -1,6 +1,7 @@
 package com.arthurdw.threedots
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.arthurdw.threedots.screens.NewsScreen
 import com.arthurdw.threedots.screens.OverviewScreen
 import com.arthurdw.threedots.screens.PickScreen
@@ -27,16 +30,25 @@ import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.LocalNavController
 
 enum class Screens(val route: String) {
-    SignInWith("sign_in_with"),
-    Unlock("unlock"),
-    Overview("overview"),
     News("news"),
-    Stocks("stocks"),
-    StockDetails("stock_details"),
-    Share("share"),
-    Settings("settings"),
-    Scan("scan"),
+    Overview("overview"),
     Pick("pick"),
+    Scan("scan"),
+    Settings("settings"),
+    Share("share"),
+    SignInWith("sign_in_with"),
+    StockDetails("stock"),
+    Stocks("stocks"),
+    Unlock("unlock");
+
+    fun withArgs(vararg args: String): String {
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }
 
 class MainActivity : ComponentActivity() {
@@ -62,7 +74,22 @@ class MainActivity : ComponentActivity() {
                             composable(Screens.Overview.route) { OverviewScreen() }
                             composable(Screens.News.route) { NewsScreen() }
                             composable(Screens.Stocks.route) { StocksScreen() }
-                            composable(Screens.StockDetails.route) { StockDetailsScreen("AAPL") }
+                            composable(
+                                Screens.StockDetails.route + "/{symbol}",
+                                arguments = listOf(navArgument("symbol") {
+                                    type = NavType.StringType
+                                })
+                            ) {
+                                val symbol = it.arguments?.getString("symbol")
+
+                                // A symbol is required to show the details screen.
+                                if (symbol == null) {
+                                    Log.e("MainActivity", "StockDetailsScreen: symbol is null")
+                                    return@composable
+                                }
+
+                                StockDetailsScreen(symbol)
+                            }
                             composable(Screens.Share.route) { ShareScreen() }
                             composable(Screens.Settings.route) { SettingsScreen() }
                             composable(Screens.Scan.route) { ScanScreen() }

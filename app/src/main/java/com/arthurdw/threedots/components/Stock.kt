@@ -1,6 +1,7 @@
 package com.arthurdw.threedots.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,16 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.arthurdw.threedots.Screens
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.toCurrencyString
 
 @Composable
 fun Stock(stock: BasicStock, modifier: Modifier = Modifier) {
+    val navController = LocalNavController.current
+
     Box(
-        modifier = modifier.background(
-            MaterialTheme.colorScheme.surface,
-            RoundedCornerShape(12.dp)
-        )
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+            .clickable { navController.navigate(Screens.StockDetails.withArgs(stock.symbol)) }
     ) {
         Row(
             modifier = Modifier
