@@ -59,7 +59,9 @@ fun StocksSection(title: String, data: List<BasicStock>, modifier: Modifier = Mo
 
 
 @Composable
-fun OverviewScreen() {
+fun OverviewScreen(userId: String?) {
+    // TODO: Check if QR code is valid (user with id exists)
+    // TODO: Get data from user with id
     val worthData = listOf(
         107423f, 102772f, 104625f, 108720f, 111021f, 105459f, 108591f, 119075f, 117689f, 110650f,
         115683f, 124708f, 118317f,
@@ -123,6 +125,6 @@ fun OverviewScreen() {
 @Composable
 fun OverviewScreenPreview() {
     PreviewWrapper {
-        OverviewScreen()
+        OverviewScreen(null)
     }
 }

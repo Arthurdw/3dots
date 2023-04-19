@@ -71,7 +71,16 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(Screens.Overview.route)
                                 })
                             }
-                            composable(Screens.Overview.route) { OverviewScreen() }
+                            composable(Screens.Overview.route) { OverviewScreen(null) }
+                            composable(
+                                Screens.Overview.route + "/{id}",
+                                arguments = listOf(navArgument("id") {
+                                    type = NavType.StringType
+                                })
+                            ) {
+                                val id = it.arguments?.getString("id")
+                                OverviewScreen(id)
+                            }
                             composable(Screens.News.route) { NewsScreen() }
                             composable(Screens.Stocks.route) { StocksScreen() }
                             composable(
