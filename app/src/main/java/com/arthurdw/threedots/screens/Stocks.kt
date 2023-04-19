@@ -11,12 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,18 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
+import com.arthurdw.threedots.components.InputField
 import com.arthurdw.threedots.components.Stock
 import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.utils.PreviewWrapper
+
 
 @Composable
 fun SearchBar(
@@ -45,8 +39,6 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     placeholder: String = "Search",
 ) {
-    val focusManager = LocalFocusManager.current
-
     var query by remember { mutableStateOf("") }
     val searchIcon = painterResource(R.drawable.ic_search)
     val clearIcon = painterResource(R.drawable.ic_exit)
@@ -56,16 +48,9 @@ fun SearchBar(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = { query = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-            singleLine = true,
-            keyboardActions = KeyboardActions(onSend = {
-                focusManager.clearFocus()
-                onSearch(query)
-            }),
-            placeholder = { Text(text = placeholder) },
+        InputField(
+            onSearch = onSearch,
+            placeholder = placeholder,
             trailingIcon = {
                 if (query.isNotEmpty()) {
                     Image(
@@ -90,15 +75,6 @@ fun SearchBar(
                     )
                 }
             },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = MaterialTheme.colorScheme.primary,
-                disabledTextColor = MaterialTheme.colorScheme.primary,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
-                placeholderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Transparent
-            ),
             modifier = Modifier.fillMaxWidth(0.9f)
         )
     }
