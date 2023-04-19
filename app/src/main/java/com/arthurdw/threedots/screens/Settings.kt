@@ -1,7 +1,6 @@
 package com.arthurdw.threedots.screens
 
 import android.os.Build
-import android.os.Build.VERSION
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -92,7 +91,6 @@ fun SettingsToggle(text: String, onToggle: (Boolean) -> Unit) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SettingsScreen() {
 
@@ -131,10 +129,6 @@ fun SettingsScreen() {
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(0.9f)
                 )
-                SplitBetween {
-                    BaseText("Android Version:")
-                    BaseText(VERSION.RELEASE_OR_PREVIEW_DISPLAY)
-                }
                 SplitBetween {
                     BaseText("App Version:")
                     // TODO: Get this version number dynamically
