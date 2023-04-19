@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun InputField(
-    onSearch: (String) -> Unit,
+    onComplete: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -34,10 +34,12 @@ fun InputField(
         onValueChange = { query = it },
         keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
         singleLine = true,
-        keyboardActions = KeyboardActions(onDone = {
-            focusManager.clearFocus()
-            onSearch(query)
-        }),
+        keyboardActions = KeyboardActions(
+            onAny = {
+                focusManager.clearFocus()
+                onComplete(query)
+            }
+        ),
         placeholder = { if (placeholder != null) Text(text = placeholder) },
         trailingIcon = trailingIcon,
         colors = TextFieldDefaults.outlinedTextFieldColors(
