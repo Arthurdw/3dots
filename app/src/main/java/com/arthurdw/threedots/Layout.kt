@@ -168,7 +168,7 @@ fun Sidebar(onClose: () -> Unit) {
 
     Row(
         modifier = Modifier
-            .height(screenHeight - 124.dp)
+            .height(screenHeight - 116.dp)
             .background(MaterialTheme.colorScheme.background)
             .zIndex(1000f)
     ) {

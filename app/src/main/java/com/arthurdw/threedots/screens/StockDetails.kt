@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.arthurdw.threedots.Screens
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.data.objects.OwnedStock
 import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
+import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toCurrencyString
 import com.arthurdw.threedots.utils.toDateString
@@ -154,6 +156,7 @@ fun StockDetailsScreen(stockSymbol: String) {
     )
 
     val scrollState = rememberScrollState()
+    val navController = LocalNavController.current
 
     val minimumValue = stock.intraday.min()
     val maximumValue = stock.intraday.max()
@@ -190,9 +193,9 @@ fun StockDetailsScreen(stockSymbol: String) {
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
-            StockButton(text = "PICK", onClick = { /*TODO*/ })
+            StockButton(text = "PICK", onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
             Spacer(modifier = Modifier.height(8.dp))
-            StockButton(text = "SELL", onClick = { /*TODO*/ })
+            StockButton(text = "SELL", onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol, true)) })
             Spacer(modifier = Modifier.height(8.dp))
             StockButton(text = "Add to watchlist", onClick = { /*TODO*/ })
             Spacer(modifier = Modifier.height(8.dp))

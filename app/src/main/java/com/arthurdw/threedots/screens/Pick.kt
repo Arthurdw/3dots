@@ -6,8 +6,10 @@ import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.utils.PreviewWrapper
 
 @Composable
-fun PickScreen() {
-    ThreeDotsLayout("Pick") {
+fun PickScreen(stockId: String, sell: Boolean = false) {
+    val title = if (sell) "Sell" else "Buy"
+
+    ThreeDotsLayout(title) {
 
     }
 }
@@ -16,6 +18,6 @@ fun PickScreen() {
 @Composable
 fun PickScreenPreview() {
     PreviewWrapper {
-        PickScreen()
+        PickScreen("APL")
     }
 }

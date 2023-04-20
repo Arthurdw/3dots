@@ -41,7 +41,7 @@ enum class Screens(val route: String) {
     Stocks("stocks"),
     Unlock("unlock");
 
-    fun withArgs(vararg args: String): String {
+    fun <T>withArgs(vararg args: T): String {
         return buildString {
             append(route)
             args.forEach { arg ->
@@ -102,7 +102,42 @@ class MainActivity : ComponentActivity() {
                             composable(Screens.Share.route) { ShareScreen() }
                             composable(Screens.Settings.route) { SettingsScreen() }
                             composable(Screens.Scan.route) { ScanScreen() }
-                            composable(Screens.Pick.route) { PickScreen() }
+                            composable(
+                                Screens.Pick.route + "/{stockId}",
+                                arguments = listOf(navArgument("stockId") {
+                                    type = NavType.StringType
+                                })
+                            ) {
+                                val stockId = it.arguments?.getString("stockId")
+
+                                if (stockId == null) {
+                                    Log.e("MainActivity", "PickScreen: stockId is null")
+                                    return@composable
+                                }
+
+                                PickScreen(stockId)
+                            }
+                            composable(
+                                Screens.Pick.route + "/{stockId}/{sell}",
+                                arguments = listOf(
+                                    navArgument("stockId") {
+                                        type = NavType.StringType
+                                    },
+                                    navArgument("sell") {
+                                        type = NavType.BoolType
+                                    }
+                                )
+                            ) {
+                                val stockId = it.arguments?.getString("stockId")
+                                val sell = it.arguments?.getBoolean("sell")
+
+                                if (stockId == null || sell == null) {
+                                    Log.e("MainActivity", "PickScreen: stockId or sell is null")
+                                    return@composable
+                                }
+
+                                PickScreen(stockId, sell)
+                            }
                         }
                     }
                 }
