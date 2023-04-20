@@ -2,9 +2,11 @@ package com.arthurdw.threedots.components
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,7 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import com.arthurdw.threedots.utils.empty
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputField(
     onComplete: (String) -> Unit,
@@ -25,13 +29,18 @@ fun InputField(
     trailingIcon: @Composable (() -> Unit)? = null,
     imeAction: ImeAction = ImeAction.Done,
     keyboardType: KeyboardType = KeyboardType.Text,
+    value: String = String.empty(),
+    colorsOverride: TextFieldColors? = null,
 ) {
     val focusManager = LocalFocusManager.current
-    var query by remember { mutableStateOf("") }
+
+    var query by remember { mutableStateOf(value) }
 
     OutlinedTextField(
         value = query,
-        onValueChange = { query = it },
+        onValueChange = {
+            query = it
+        },
         keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
         singleLine = true,
         keyboardActions = KeyboardActions(
@@ -42,12 +51,12 @@ fun InputField(
         ),
         placeholder = { if (placeholder != null) Text(text = placeholder) },
         trailingIcon = trailingIcon,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
+        colors = colorsOverride ?: TextFieldDefaults.outlinedTextFieldColors(
             textColor = MaterialTheme.colorScheme.primary,
             disabledTextColor = MaterialTheme.colorScheme.primary,
             cursorColor = MaterialTheme.colorScheme.primary,
-            backgroundColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
             placeholderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = Color.Transparent
         ),

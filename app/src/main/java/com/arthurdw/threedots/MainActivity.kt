@@ -41,7 +41,7 @@ enum class Screens(val route: String) {
     Stocks("stocks"),
     Unlock("unlock");
 
-    fun <T>withArgs(vararg args: T): String {
+    fun <T: Any>withArgs(vararg args: T): String {
         return buildString {
             append(route)
             args.forEach { arg ->

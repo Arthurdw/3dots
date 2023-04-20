@@ -93,7 +93,6 @@ fun SettingsToggle(text: String, onToggle: (Boolean) -> Unit) {
 
 @Composable
 fun SettingsScreen() {
-
     ThreeDotsLayout("Settings") {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -110,7 +109,7 @@ fun SettingsScreen() {
                     onComplete = { /* TODO */ },
                     // TODO: Get this name dynamically
                     placeholder = "Arthurdw",
-                    modifier = Modifier.fillMaxWidth(0.9f)
+                    modifier = Modifier.fillMaxWidth(0.9f),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 SettingsToggle("Dark mode:") { /* TODO */ }

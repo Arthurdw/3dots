@@ -77,7 +77,7 @@ fun SearchBar(
                 }
             },
             imeAction = ImeAction.Search,
-            modifier = Modifier.fillMaxWidth(0.9f)
+            modifier = Modifier.fillMaxWidth(0.9f),
         )
     }
 }
