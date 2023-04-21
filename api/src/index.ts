@@ -4,11 +4,18 @@ import { poweredBy } from "hono/powered-by";
 import { prettyJSON } from "hono/pretty-json";
 import { logger } from "hono/logger";
 import { etag } from "hono/etag";
+import { z } from "zod";
+import { zValidator } from "@hono/zod-validator";
 import { Environment } from "hono/dist/types/types";
 
 const hono = new Hono();
 
-const db = (c: Context<string, Environment, null>) =>
+const UserCreateSchema = z.object({
+  username: z.string(),
+  email: z.string().email(),
+});
+
+const db = (c: Context<string, Environment, any>) =>
   new PrismaClient({
     datasources: {
       db: {
@@ -26,16 +33,26 @@ hono.get("/", (c) =>
 
 const app = hono.route("/v1");
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
+app.post("/users", zValidator("json", UserCreateSchema), async (c) => {
+  const prisma = db(c);
+  const data: z.infer<typeof UserCreateSchema> = c.req.valid("json");
+
+  const user = await prisma.user.create({
+    data: {
+      username: data.username,
+      email: data.email,
+    },
+  });
+
+  return c.json(user);
 });
 
-app.get("/users", async (c) => {
+app.get("/users/:id", async (c) => {
+  const id = c.req.param("id");
   const prisma = db(c);
 
-  const users = await prisma.user.findMany();
-
-  return c.json(users);
+  const user = await prisma.user.findUnique({ where: { id } });
+  return c.json(user);
 });
 
 export default app;
