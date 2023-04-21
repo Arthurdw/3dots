@@ -1,12 +1,13 @@
 import { PrismaClient } from "@prisma/client/edge";
-import { Context, Hono } from "hono";
+import { Context, Hono, Next } from "hono";
 import { poweredBy } from "hono/powered-by";
 import { prettyJSON } from "hono/pretty-json";
 import { logger } from "hono/logger";
 import { etag } from "hono/etag";
+import { jwt as jwtMiddleware } from "hono/jwt";
+import { Jwt as jwt } from "hono/utils/jwt";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
-import { Environment } from "hono/dist/types/types";
 
 const hono = new Hono();
 
@@ -15,7 +16,12 @@ const UserCreateSchema = z.object({
   email: z.string().email(),
 });
 
-const db = (c: Context<string, Environment, any>) =>
+const requiresAuth = (c: Context, next: Next) => {
+  // @ts-ignore
+  return jwtMiddleware({ secret: c.env.JWT_SECRET })(c, next);
+};
+
+const db = (c: Context) =>
   new PrismaClient({
     datasources: {
       db: {
@@ -33,6 +39,17 @@ hono.get("/", (c) =>
 
 const app = hono.route("/v1");
 
+app.post("/login", async (c) => {
+  // TODO: Google OAuth verify
+  const prisma = db(c);
+  const user = await prisma.user.findUnique({
+    where: { id: "clgqj11jw0000o40h70ajkwnm" },
+  });
+  // TODO: Add expiration
+  const token = await jwt.sign({ user }, c.env.JWT_SECRET);
+  return c.json({ token });
+});
+
 app.post("/users", zValidator("json", UserCreateSchema), async (c) => {
   const prisma = db(c);
   const data: z.infer<typeof UserCreateSchema> = c.req.valid("json");
@@ -47,11 +64,12 @@ app.post("/users", zValidator("json", UserCreateSchema), async (c) => {
   return c.json(user);
 });
 
-app.get("/users/:id", async (c) => {
-  const id = c.req.param("id");
+app.get("/users/me", requiresAuth, async (c) => {
   const prisma = db(c);
-
-  const user = await prisma.user.findUnique({ where: { id } });
+  console.log(c.get("jwtPayload").user);
+  const user = await prisma.user.findUnique({
+    where: { id: c.get("jwtPayload").user.id },
+  });
   return c.json(user);
 });
 

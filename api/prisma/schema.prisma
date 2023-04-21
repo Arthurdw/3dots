@@ -27,3 +27,12 @@ model Picks {
   @@id([userId, stock])
 }
 
+model NewsItemCache {
+  id          Int     @id @default(autoincrement())
+  title       String
+  snippet     String
+  url         String
+  imageUrl    String
+  source      String
+  dateStr     String
+}
