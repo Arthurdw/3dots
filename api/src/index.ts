@@ -16,6 +16,36 @@ const UserCreateSchema = z.object({
   email: z.string().email(),
 });
 
+const UserLoginSchema = z.object({ token: z.string() });
+
+interface GoogleTokenResponse {
+  iss: string;
+  azp: string;
+  aud: string;
+  sub: string;
+  email: string;
+  email_verified: string;
+  name: string;
+  picture: string;
+  given_name: string;
+  family_name: string;
+  locale: string;
+  iat: string;
+  exp: string;
+  alg: string;
+  kid: string;
+  typ: string;
+}
+
+const getGoogleTokenData = async (
+  token: string
+): Promise<GoogleTokenResponse> => {
+  const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`;
+  const res = await fetch(url);
+  if (res.ok) return (await res.json()) as GoogleTokenResponse;
+  return null;
+};
+
 const requiresAuth = (c: Context, next: Next) => {
   // @ts-ignore
   return jwtMiddleware({ secret: c.env.JWT_SECRET })(c, next);
@@ -39,38 +69,59 @@ hono.get("/", (c) =>
 
 const app = hono.route("/v1");
 
-app.post("/login", async (c) => {
-  // TODO: Google OAuth verify
+app.post("/users", zValidator("json", UserLoginSchema), async (c) => {
+  const data: z.infer<typeof UserLoginSchema> = c.req.valid("json");
+  const googleToken = await getGoogleTokenData(data.token);
+
+  if (
+    !googleToken ||
+    googleToken.azp !== c.env.GOOGLE_APP_ID ||
+    googleToken.aud !== c.env.GOOGLE_CLIENT_ID
+  ) {
+    return new Response(
+      JSON.stringify({
+        message: "Invalid Google token",
+      }),
+      { status: 401 }
+    );
+  }
+
+  if (!googleToken.email_verified) {
+    return new Response(
+      JSON.stringify({
+        message: "Email not verified",
+      }),
+      { status: 401 }
+    );
+  }
+
   const prisma = db(c);
-  const user = await prisma.user.findUnique({
-    where: { id: "clgqj11jw0000o40h70ajkwnm" },
+  let user = await prisma.user.findUnique({
+    where: { email: googleToken.email },
   });
-  // TODO: Add expiration
-  const token = await jwt.sign({ user }, c.env.JWT_SECRET);
+
+  if (!user) {
+    user = await prisma.user.create({
+      data: {
+        username: googleToken.name,
+        email: googleToken.email,
+      },
+    });
+  }
+
+  const token = await jwt.sign({ user }, <string>c.env.JWT_SECRET);
   return c.json({ token });
-});
-
-app.post("/users", zValidator("json", UserCreateSchema), async (c) => {
-  const prisma = db(c);
-  const data: z.infer<typeof UserCreateSchema> = c.req.valid("json");
-
-  const user = await prisma.user.create({
-    data: {
-      username: data.username,
-      email: data.email,
-    },
-  });
-
-  return c.json(user);
 });
 
 app.get("/users/me", requiresAuth, async (c) => {
   const prisma = db(c);
+  // @ts-ignore
   console.log(c.get("jwtPayload").user);
   const user = await prisma.user.findUnique({
+    // @ts-ignore
     where: { id: c.get("jwtPayload").user.id },
   });
   return c.json(user);
 });
 
-export default app;
+export default hono;

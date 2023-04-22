@@ -105,6 +105,10 @@ fun SignInWith() {
             "3dots",
             "LastSignInAccount: ${lastSignInAccount.email} ${lastSignInAccount.givenName}"
         )
+        Log.d(
+            "3dots",
+            "SignInWith: ${lastSignInAccount.idToken}"
+        )
         navController.navigate(Screens.Overview.route)
         googleSignInClient.signOut()
     }
