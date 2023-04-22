@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,8 +25,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.Screens
+import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -37,8 +41,11 @@ import com.google.android.gms.common.api.ApiException
 @SuppressLint("StaticFieldLeak")
 private lateinit var googleSignInClient: GoogleSignInClient
 
+var isFirstRun = true
+
 private fun createGoogleSignInClient(context: Context): GoogleSignInClient {
     val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestIdToken(context.getString(R.string.default_web_client_id))
         .requestEmail()
         .build()
 
@@ -46,7 +53,11 @@ private fun createGoogleSignInClient(context: Context): GoogleSignInClient {
 }
 
 @Composable
-fun GoogleSignInButton(onSignIn: (GoogleSignInAccount) -> Unit) {
+fun GoogleSignInButton(
+    onSignIn: (GoogleSignInAccount) -> Unit,
+    onClick: () -> Unit = {},
+    onFail: () -> Unit = {}
+) {
     val signInLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
@@ -55,6 +66,7 @@ fun GoogleSignInButton(onSignIn: (GoogleSignInAccount) -> Unit) {
                 onSignIn(account!!)
             } catch (e: ApiException) {
                 Log.e("3dots", "Failed to sign in with Google: ${e.message}")
+                onFail()
             }
         }
 
@@ -65,6 +77,7 @@ fun GoogleSignInButton(onSignIn: (GoogleSignInAccount) -> Unit) {
         }
     }) { signInButton ->
         signInButton.setOnClickListener {
+            onClick()
             signInLauncher.launch(googleSignInClient.signInIntent)
         }
     }
@@ -75,8 +88,37 @@ fun SignInWith() {
     val context = LocalContext.current as Activity
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
     val navController = LocalNavController.current
+    val isLoading = remember { mutableStateOf(false) }
 
-    googleSignInClient = createGoogleSignInClient(context)
+    googleSignInClient = remember { createGoogleSignInClient(context) }
+
+    val lastSignInAccount = remember(key1 = isFirstRun) {
+        if (isFirstRun) GoogleSignIn.getLastSignedInAccount(context)
+        else null // Return null on subsequent calls
+    }
+    val isDoneProcessing = lastSignInAccount == null && !isFirstRun
+    isFirstRun = false
+
+    if (lastSignInAccount != null) {
+        // TODO: Set state
+        Log.d(
+            "3dots",
+            "LastSignInAccount: ${lastSignInAccount.email} ${lastSignInAccount.givenName}"
+        )
+        navController.navigate(Screens.Overview.route)
+        googleSignInClient.signOut()
+    }
+
+    Log.d("3dots", "SignInWith: $isDoneProcessing $isLoading")
+
+    if (!isDoneProcessing || isLoading.value) {
+        Loading(
+            // Small trick to prevent blocking behaviour
+            Modifier
+                .zIndex(9999999f)
+                .background(color = MaterialTheme.colorScheme.background)
+        )
+    }
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
@@ -100,13 +142,24 @@ fun SignInWith() {
                 modifier = Modifier.padding(bottom = 100.dp),
                 color = MaterialTheme.colorScheme.background
             ) {
-                GoogleSignInButton(onSignIn = {
-                    // TODO: Complete sign up/sign in
-                    // TODO: Share the user like the localnavcontroller
-                    Log.d("3dots", "SignInWith: $it")
-                    Log.d("3dots", "SignInWith: ${it.email} ${it.givenName}")
-                    navController.navigate(Screens.Overview.route)
-                })
+                GoogleSignInButton(
+                    onSignIn = {
+                        // TODO: Complete sign up/sign in
+                        // TODO: Share the user like the localnavcontroller
+                        Log.d("3dots", "SignInWith: $it")
+                        Log.d("3dots", "SignInWith: ${it.email} ${it.givenName}")
+                        Log.d("3dots", "SignInWith: ${it.idToken}")
+                        navController.navigate(Screens.Overview.route)
+                    },
+                    onClick = {
+                        isLoading.value = true
+                        Log.d("3dots", "SignInWith: Loading...")
+                    },
+                    onFail = {
+                        isLoading.value = false
+                        Log.d("3dots", "SignInWith: Failed to load")
+                    }
+                )
             }
         }
     }
