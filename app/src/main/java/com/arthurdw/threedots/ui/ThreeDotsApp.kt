@@ -18,7 +18,7 @@ import com.arthurdw.threedots.ui.screens.PickScreen
 import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen
-import com.arthurdw.threedots.ui.screens.SignInWith
+import com.arthurdw.threedots.ui.screens.SignInScreen
 import com.arthurdw.threedots.ui.screens.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.StocksScreen
 import com.arthurdw.threedots.ui.screens.Unlock
@@ -36,7 +36,7 @@ enum class Screens(val route: String) {
     Stocks("stocks"),
     Unlock("unlock");
 
-    fun <T: Any>withArgs(vararg args: T): String {
+    fun <T : Any> withArgs(vararg args: T): String {
         return buildString {
             append(route)
             args.forEach { arg ->
@@ -56,7 +56,7 @@ fun ThreeDotsApp(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.background
         ) {
             NavHost(navController, startDestination = Screens.SignInWith.route) {
-                composable(Screens.SignInWith.route) { SignInWith() }
+                composable(Screens.SignInWith.route) { SignInScreen() }
                 composable(Screens.Unlock.route) {
                     Unlock(text = "Welcome back, Arthur!", onSuccess = {
                         navController.navigate(Screens.Overview.route)

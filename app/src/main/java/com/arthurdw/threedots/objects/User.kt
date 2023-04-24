@@ -8,4 +8,16 @@ data class User(
     val email: String,
     val createdAt: Date,
     val updatedAt: Date,
-)
+) {
+    companion object {
+        fun empty(): User {
+            return User(
+                id = "",
+                username = "",
+                email = "",
+                createdAt = Date(),
+                updatedAt = Date(),
+            )
+        }
+    }
+}

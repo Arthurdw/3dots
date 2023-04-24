@@ -38,5 +38,4 @@ class DefaultAppContainer : AppContainer {
     override val repository: Repository by lazy {
         NetworkRepository(publicApiService, protectedApiService)
     }
-
 }

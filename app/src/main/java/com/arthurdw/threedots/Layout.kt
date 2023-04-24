@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
+import com.arthurdw.threedots.utils.createGoogleSignInClient
 
 @Composable
 fun QuickNav() {
@@ -141,6 +143,7 @@ fun Sidebar(onClose: () -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val navController = State.NavController.current
+    val context = LocalContext.current
 
     data class NavItem(val text: String, val screen: Screens)
 
@@ -228,7 +231,8 @@ fun Sidebar(onClose: () -> Unit) {
                     Screens.SignInWith,
                     modifier = Modifier.padding(bottom = 16.dp),
                     onClick = {
-                        // TODO: Logout
+                        val googleSignInClient = createGoogleSignInClient(context)
+                        googleSignInClient.signOut()
                     }
                 )
             }

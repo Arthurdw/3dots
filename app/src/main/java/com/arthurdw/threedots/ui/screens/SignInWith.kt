@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.ui.Screens
@@ -85,7 +86,20 @@ fun GoogleSignInButton(
 }
 
 @Composable
-fun SignInWith() {
+fun SignInScreen(
+    signInViewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory),
+    modifier: Modifier = Modifier
+) {
+    SignIn(
+        onGoogleTokenReceived = signInViewModel::signIn
+    )
+}
+
+@Composable
+fun SignIn(
+    onGoogleTokenReceived: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current as Activity
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
     val navController = State.NavController.current
@@ -175,7 +189,9 @@ fun SignInWith() {
 @Composable
 fun SignInWithPreview() {
     PreviewWrapper {
-        SignInWith()
+        SignIn(
+            onGoogleTokenReceived = {}
+        )
     }
 }
 
