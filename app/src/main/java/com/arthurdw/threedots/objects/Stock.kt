@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.data.objects
+package com.arthurdw.threedots.objects
 
 import com.arthurdw.threedots.utils.toPercentageString
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel

@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.arthurdw.threedots.Screens
 import com.arthurdw.threedots.ThreeDotsLayout
-import com.arthurdw.threedots.data.objects.OwnedStock
-import com.arthurdw.threedots.data.objects.StockDetails
+import com.arthurdw.threedots.objects.OwnedStock
+import com.arthurdw.threedots.objects.StockDetails
+import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper

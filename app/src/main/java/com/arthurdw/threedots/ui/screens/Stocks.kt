@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -29,7 +29,7 @@ import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.InputField
 import com.arthurdw.threedots.components.Stock
-import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.objects.BasicStock
 import com.arthurdw.threedots.utils.PreviewWrapper
 
 

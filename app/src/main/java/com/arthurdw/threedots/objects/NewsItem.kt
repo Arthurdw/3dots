@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.data.objects
+package com.arthurdw.threedots.objects
 
 import java.text.SimpleDateFormat
 import java.util.Date

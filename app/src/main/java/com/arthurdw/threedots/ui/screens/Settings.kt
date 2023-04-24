@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi

@@ -18,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.arthurdw.threedots.Screens
-import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.objects.BasicStock
+import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.toCurrencyString
 

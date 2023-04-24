@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,7 +25,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 

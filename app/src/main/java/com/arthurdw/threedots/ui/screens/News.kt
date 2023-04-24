@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -39,7 +39,7 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Ripple
-import com.arthurdw.threedots.data.objects.NewsItem
+import com.arthurdw.threedots.objects.NewsItem
 import com.arthurdw.threedots.utils.toDateString
 import java.lang.Float.min
 

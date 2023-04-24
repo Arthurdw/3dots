@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image

@@ -1,11 +1,10 @@
-package com.arthurdw.threedots.screens
+package com.arthurdw.threedots.ui.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.lifecycle.viewModelScope
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,10 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.R
-import com.arthurdw.threedots.Screens
 import com.arthurdw.threedots.components.Loading
-import com.arthurdw.threedots.data.Api
-import com.arthurdw.threedots.data.objects.api.LoginData
+import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
