@@ -25,8 +25,8 @@ import com.arthurdw.threedots.objects.OwnedStock
 import com.arthurdw.threedots.objects.StockDetails
 import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
-import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 import com.arthurdw.threedots.utils.toCurrencyString
 import com.arthurdw.threedots.utils.toDateString
 import com.arthurdw.threedots.utils.toPercentageString
@@ -156,7 +156,7 @@ fun StockDetailsScreen(stockSymbol: String) {
     )
 
     val scrollState = rememberScrollState()
-    val navController = LocalNavController.current
+    val navController = State.NavController.current
 
     val minimumValue = stock.intraday.min()
     val maximumValue = stock.intraday.max()

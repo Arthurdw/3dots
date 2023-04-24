@@ -29,8 +29,8 @@ import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.ui.Screens
-import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -88,7 +88,7 @@ fun GoogleSignInButton(
 fun SignInWith() {
     val context = LocalContext.current as Activity
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
-    val navController = LocalNavController.current
+    val navController = State.NavController.current
     val isLoading = remember { mutableStateOf(false) }
 
     googleSignInClient = remember { createGoogleSignInClient(context) }

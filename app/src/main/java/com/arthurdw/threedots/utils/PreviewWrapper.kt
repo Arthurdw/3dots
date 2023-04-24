@@ -10,7 +10,7 @@ internal fun PreviewWrapper(content: @Composable () -> Unit) {
     val navController = rememberNavController()
 
     ThreeDotsTheme {
-        CompositionLocalProvider(LocalNavController provides navController) {
+        CompositionLocalProvider(State.NavController provides navController) {
             content()
         }
     }

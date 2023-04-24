@@ -36,12 +36,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.arthurdw.threedots.ui.Screens
-import com.arthurdw.threedots.utils.LocalNavController
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 
 @Composable
 fun QuickNav() {
-    val navController = LocalNavController.current
+    val navController = State.NavController.current
 
     @Composable
     fun NavItem(
@@ -140,7 +140,7 @@ fun VerticalDivider(modifier: Modifier = Modifier) {
 fun Sidebar(onClose: () -> Unit) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val navController = LocalNavController.current
+    val navController = State.NavController.current
 
     data class NavItem(val text: String, val screen: Screens)
 

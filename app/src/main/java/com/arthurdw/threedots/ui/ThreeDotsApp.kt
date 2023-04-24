@@ -22,7 +22,7 @@ import com.arthurdw.threedots.ui.screens.SignInWith
 import com.arthurdw.threedots.ui.screens.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.StocksScreen
 import com.arthurdw.threedots.ui.screens.Unlock
-import com.arthurdw.threedots.utils.LocalNavController
+import com.arthurdw.threedots.utils.State
 
 enum class Screens(val route: String) {
     News("news"),
@@ -50,7 +50,7 @@ enum class Screens(val route: String) {
 fun ThreeDotsApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
-    CompositionLocalProvider(LocalNavController provides navController) {
+    CompositionLocalProvider(State.NavController provides navController) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
