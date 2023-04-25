@@ -1,5 +1,6 @@
 package com.arthurdw.threedots.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -11,15 +12,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.arthurdw.threedots.ThreeDotsApplication
 import com.arthurdw.threedots.data.Repository
-import com.arthurdw.threedots.objects.User
 import com.arthurdw.threedots.utils.State
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 sealed interface SignInState {
     object Loading : SignInState
     object Waiting : SignInState
+    object Success : SignInState
     data class Error(val message: String) : SignInState
-    data class Success(val user: User) : SignInState
 }
 
 class SignInViewModel(private val repository: Repository) : ViewModel() {
@@ -31,10 +32,21 @@ class SignInViewModel(private val repository: Repository) : ViewModel() {
             state = SignInState.Loading
             state = try {
                 // TODO: Store data locally
-                State.LocalApiToken = repository.loginOrRegister(token)
-                SignInState.Success(repository.getMe())
+                try {
+                    State.LocalApiToken = repository.loginOrRegister(token)
+                    State.LocalUser = repository.getMe()
+                    SignInState.Success
+                } catch (e: HttpException) {
+                    val errorBody = e.response()?.errorBody()?.string() ?: "Unknown error"
+                    val message = "An error occurred while signing in: $errorBody"
+                    Log.e("SignInViewModel", message)
+                    SignInState.Error(message)
+                }
             } catch (e: Exception) {
-                SignInState.Error(e.message ?: "Unknown error")
+                val unknown = "Unknown error"
+                val message = "An error occurred while signing in: ${e.message ?: unknown}"
+                Log.e("SignInViewModel", message)
+                SignInState.Error(message)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -57,7 +58,7 @@ private fun createGoogleSignInClient(context: Context): GoogleSignInClient {
 @Composable
 fun GoogleSignInButton(
     onSignIn: (GoogleSignInAccount) -> Unit,
-    onClick: () -> Unit = {},
+    preCheck: () -> Boolean = { true },
     onFail: () -> Unit = {}
 ) {
     val signInLauncher =
@@ -79,8 +80,9 @@ fun GoogleSignInButton(
         }
     }) { signInButton ->
         signInButton.setOnClickListener {
-            onClick()
-            signInLauncher.launch(googleSignInClient.signInIntent)
+            if (preCheck()) {
+                signInLauncher.launch(googleSignInClient.signInIntent)
+            }
         }
     }
 }
@@ -91,19 +93,22 @@ fun SignInScreen(
     modifier: Modifier = Modifier
 ) {
     SignIn(
+        uiState = signInViewModel.state,
         onGoogleTokenReceived = signInViewModel::signIn
     )
 }
 
 @Composable
 fun SignIn(
+    uiState: SignInState,
     onGoogleTokenReceived: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current as Activity
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
     val navController = State.NavController.current
     val isLoading = remember { mutableStateOf(false) }
+    val hasHadApiError = remember { mutableStateOf(false) }
 
     googleSignInClient = remember { createGoogleSignInClient(context) }
 
@@ -115,7 +120,7 @@ fun SignIn(
     isFirstRun = false
 
     if (lastSignInAccount != null) {
-        // TODO: Set state
+        // TODO: Get user from local database
         Log.d(
             "3dots",
             "LastSignInAccount: ${lastSignInAccount.email} ${lastSignInAccount.givenName}"
@@ -124,20 +129,25 @@ fun SignIn(
             "3dots",
             "SignInWith: ${lastSignInAccount.idToken}"
         )
-//        Api.public.loginOrRegisterUser(LoginData(lastSignInAccount.idToken!!))
         navController.navigate(Screens.Overview.route)
-        googleSignInClient.signOut()
     }
 
-    Log.d("3dots", "SignInWith: $isDoneProcessing $isLoading")
-
-    if (!isDoneProcessing || isLoading.value) {
+    if (!isDoneProcessing || isLoading.value || uiState is SignInState.Loading) {
         Loading(
             // Small trick to prevent blocking behaviour
             Modifier
                 .zIndex(9999999f)
                 .background(color = MaterialTheme.colorScheme.background)
         )
+    }
+
+    if (uiState is SignInState.Error) {
+        Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+        hasHadApiError.value = true
+    }
+
+    if (uiState is SignInState.Success) {
+        navController.navigate(Screens.Overview.route)
     }
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -164,20 +174,25 @@ fun SignIn(
             ) {
                 GoogleSignInButton(
                     onSignIn = {
-                        // TODO: Complete sign up/sign in
-                        // TODO: Share the user like the localnavcontroller
-                        Log.d("3dots", "SignInWith: $it")
-                        Log.d("3dots", "SignInWith: ${it.email} ${it.givenName}")
-                        Log.d("3dots", "SignInWith: ${it.idToken}")
-                        navController.navigate(Screens.Overview.route)
+                        onGoogleTokenReceived(it.idToken!!)
+                        isLoading.value = false
                     },
-                    onClick = {
+                    preCheck = {
                         isLoading.value = true
-                        Log.d("3dots", "SignInWith: Loading...")
+
+                        if (hasHadApiError.value) {
+                            val account = GoogleSignIn.getLastSignedInAccount(context)
+
+                            if (account != null) {
+                                onGoogleTokenReceived(account.idToken!!)
+                                return@GoogleSignInButton false
+                            }
+                        }
+                        true
                     },
                     onFail = {
                         isLoading.value = false
-                        Log.d("3dots", "SignInWith: Failed to load")
+                        Toast.makeText(context, "Failed to sign in", Toast.LENGTH_SHORT).show()
                     }
                 )
             }
@@ -190,6 +205,29 @@ fun SignIn(
 fun SignInWithPreview() {
     PreviewWrapper {
         SignIn(
+            uiState = SignInState.Waiting,
+            onGoogleTokenReceived = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignInWithPreviewLoading() {
+    PreviewWrapper {
+        SignIn(
+            uiState = SignInState.Loading,
+            onGoogleTokenReceived = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignInWithPreviewError() {
+    PreviewWrapper {
+        SignIn(
+            uiState = SignInState.Error("An unknown error occurred"),
             onGoogleTokenReceived = {}
         )
     }

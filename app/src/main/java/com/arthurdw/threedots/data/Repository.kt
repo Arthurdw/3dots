@@ -1,14 +1,9 @@
 package com.arthurdw.threedots.data
 
+import com.arthurdw.threedots.data.objects.LoginData
+import com.arthurdw.threedots.network.ProtectedApiService
+import com.arthurdw.threedots.network.PublicApiService
 import com.arthurdw.threedots.objects.User
-
-interface PublicApiService {
-    suspend fun loginOrRegister(token: String): String
-}
-
-interface ProtectedApiService {
-    suspend fun getMe(): User
-}
 
 interface Repository {
     suspend fun loginOrRegister(token: String): String
@@ -18,9 +13,10 @@ interface Repository {
 class NetworkRepository(
     private val publicApiService: PublicApiService,
     private val protectedApiService: ProtectedApiService
-): Repository {
+) : Repository {
     override suspend fun loginOrRegister(token: String): String {
-        return publicApiService.loginOrRegister(token)
+        val loginData = LoginData(token = token)
+        return publicApiService.loginOrRegisterUser(loginData).token
     }
 
     override suspend fun getMe(): User {

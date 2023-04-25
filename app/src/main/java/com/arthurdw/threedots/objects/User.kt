@@ -1,22 +1,30 @@
 package com.arthurdw.threedots.objects
 
+import com.arthurdw.threedots.utils.DateSerializer
+import kotlinx.serialization.Serializable
 import java.util.Date
 
+@Serializable
 data class User(
     val id: String,
     val username: String,
     val email: String,
+
+    @Serializable(with = DateSerializer::class)
     val createdAt: Date,
-    val updatedAt: Date,
+
+    @Serializable(with = DateSerializer::class)
+    val updatedAt: Date
 ) {
     companion object {
-        fun empty(): User {
+        fun loading(): User {
+            val loading = "loading..."
             return User(
-                id = "",
-                username = "",
-                email = "",
+                id = loading,
+                username = loading,
+                email = loading,
                 createdAt = Date(),
-                updatedAt = Date(),
+                updatedAt = Date()
             )
         }
     }

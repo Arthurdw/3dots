@@ -233,6 +233,7 @@ fun Sidebar(onClose: () -> Unit) {
                     onClick = {
                         val googleSignInClient = createGoogleSignInClient(context)
                         googleSignInClient.signOut()
+                        // TODO: Remove local data
                     }
                 )
             }

@@ -1,8 +1,7 @@
 package com.arthurdw.threedots.objects
 
-import java.text.SimpleDateFormat
+import com.arthurdw.threedots.utils.toDate
 import java.util.Date
-import java.util.Locale
 
 data class NewsItem(
     val title: String,
@@ -13,8 +12,5 @@ data class NewsItem(
     val dateStr: String,
 ) {
     val date: Date
-        get() {
-            val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
-            return formatter.parse(dateStr) ?: throw IllegalArgumentException("Date is null")
-        }
+        get() = dateStr.toDate()
 }

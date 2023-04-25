@@ -1,6 +1,9 @@
 package com.arthurdw.threedots.utils
 
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.arthurdw.threedots.objects.User
 
@@ -15,11 +18,5 @@ object State {
             return field
         }
 
-    var LocalUser: User = User.empty()
-        get() {
-            if (field.id.isEmpty()) {
-                throw Exception("Current user is empty!")
-            }
-            return field
-        }
+    var LocalUser: User by mutableStateOf(User.loading())
 }

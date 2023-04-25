@@ -9,7 +9,8 @@ import { Jwt as jwt } from "hono/utils/jwt";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 
-const hono = new Hono();
+const honoClient = new Hono();
+const hono = honoClient.route("/api")
 
 const UserCreateSchema = z.object({
   username: z.string(),
@@ -76,7 +77,7 @@ app.post("/users", zValidator("json", UserLoginSchema), async (c) => {
   if (
     !googleToken ||
     googleToken.azp !== c.env.GOOGLE_APP_ID ||
-    googleToken.aud !== c.env.GOOGLE_CLIENT_ID
+    googleToken.aud !== c.env.GOOGLE_WEB_ID
   ) {
     return new Response(
       JSON.stringify({
@@ -103,7 +104,7 @@ app.post("/users", zValidator("json", UserLoginSchema), async (c) => {
   if (!user) {
     user = await prisma.user.create({
       data: {
-        username: googleToken.name,
+        username: googleToken.given_name,
         email: googleToken.email,
       },
     });
