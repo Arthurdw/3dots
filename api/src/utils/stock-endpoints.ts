@@ -1,5 +1,5 @@
 export class StockEndpoints {
-  private static readonly BASE_URL = "https://www.alphavantage.co/query";
+  public static readonly BASE_URL = "https://www.alphavantage.co/query";
 
   public static readonly OVERVIEW = this.make(`${this.BASE_URL}?function=OVERVIEW`);
   public static readonly INTRADAY = this.make(`${this.BASE_URL}?function=TIME_SERIES_INTRADAY&interval=5min`);

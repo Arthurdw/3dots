@@ -12,7 +12,7 @@ export default async (c: Context) => {
     StockEndpoints.QUOTE(symbol, c.env.STOCKS_API_TOKEN)
   );
   const data: QuoteData = await quote.json();
-  const sellPrice = parseFloat(data["Global Quote"]["02. open"]);
+  const sellPrice = parseFloat(data["Global Quote"]["05. price"]);
 
   const prisma = db(c);
   const user = getAuthUser(c);
@@ -52,12 +52,12 @@ export default async (c: Context) => {
 
   await prisma.user.update({
     where: {
-      id: user.id
+      id: user.id,
     },
     data: {
       gained: user.gained + gained,
-    }
-  })
+    },
+  });
 
   return c.json({ symbol, amount, gained });
 };

@@ -19,10 +19,27 @@ model User {
 }
 
 model Picks {
-  userId String
-  stock  String
-  amount Float
-  spent  Float
+  userId    String
+  stockName String
+  stock     String
+  amount    Float
+  spent     Float
 
   @@id([userId, stock])
+}
+
+model FollowedStocks {
+  userId    String
+  stockName String
+  stock     String
+
+  @@id([userId, stock])
+}
+
+model PortfolioWorthHistory {
+  userId    String
+  createdAt DateTime  @default(now())
+  worth     Float
+
+  @@id([userId, createdAt])
 }

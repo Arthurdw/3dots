@@ -1,18 +1,26 @@
 import { Context } from "hono";
 import { cachedFetch } from "../utils/cache";
-import { StockEndpoints } from "../utils/stock-endpoints";
+import { StockEndpoints, StockEndpointType } from "../utils/stock-endpoints";
 import { db } from "../utils/db";
 import { getAuthUser } from "../utils/jwt";
+
+const CACHE_TTL = 60 * 30; // 30 minutes
 
 export default async (c: Context) => {
   const symbol = c.req.param("id");
   let amount = parseFloat(c.req.query("amount")) || 1;
 
-  const quote = await cachedFetch(
-    StockEndpoints.QUOTE(symbol, c.env.STOCKS_API_TOKEN)
-  );
-  const data: QuoteData = await quote.json();
-  const sellPrice = parseFloat(data["Global Quote"]["05. price"]);
+  const fetch = (endpoint: StockEndpointType) =>
+    cachedFetch(endpoint(symbol, c.env.STOCKS_API_TOKEN), CACHE_TTL);
+
+  const [quote, overview] = await Promise.all([
+    fetch(StockEndpoints.QUOTE),
+    fetch(StockEndpoints.OVERVIEW),
+  ]);
+
+  const quoteData: QuoteData = await quote.json();
+  const overviewData: OverviewData = await overview.json();
+  const sellPrice = parseFloat(quoteData["Global Quote"]["05. price"]);
 
   const prisma = db(c);
   const user = getAuthUser(c);
@@ -35,6 +43,7 @@ export default async (c: Context) => {
         userId: user.id,
         amount,
         spent,
+        stockName: overviewData.Name,
       },
     });
   } else {
