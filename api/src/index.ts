@@ -9,6 +9,7 @@ import { requiresAuth } from "./middleware/requires-auth";
 import userLoginOrRegister from "./routes/users_POST";
 import userGetMe from "./routes/users-me_GET";
 import userStocks from "./routes/stocks-picked_GET";
+import usersMeWorth from "./routes/users-me-worth";
 import userGetFollowedStocks from "./routes/users-me-followed_GET";
 import newsGet from "./routes/news_GET";
 import stockGet from "./routes/stock-[id]_GET"
@@ -31,6 +32,7 @@ hono.get("/", (c) =>
 
 app.post("/users", zValidator("json", UserLogin), userLoginOrRegister);
 app.get("/users/me", requiresAuth, userGetMe);
+app.get("/users/me/worth", requiresAuth, usersMeWorth);
 app.get("/users/me/followed", requiresAuth, userGetFollowedStocks);
 app.get("/news", requiresAuth, newsGet)
 app.get("/stock/:id", requiresAuth, stockGet)
