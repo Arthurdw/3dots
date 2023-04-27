@@ -9,6 +9,8 @@ data class User(
     val id: String,
     val username: String,
     val email: String,
+    val spent: Float,
+    val gained: Float,
 
     @Serializable(with = DateSerializer::class)
     val createdAt: Date,
@@ -23,6 +25,8 @@ data class User(
                 id = loading,
                 username = loading,
                 email = loading,
+                spent = 0f,
+                gained = 0f,
                 createdAt = Date(),
                 updatedAt = Date()
             )

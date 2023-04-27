@@ -113,8 +113,8 @@ fun OverviewScreen(userId: String?) {
                 )
             }
 
-            BalanceStatistic("Spent:", 100_000f, modifier = Modifier.padding(top = 20.dp))
-            BalanceStatistic("Gained:", 22_500f)
+            BalanceStatistic("Spent:", user.spent, modifier = Modifier.padding(top = 20.dp))
+            BalanceStatistic("Gained:", user.gained)
 
             StocksSection("Picked stocks", pickedStocks, modifier = Modifier.padding(top = 20.dp))
             StocksSection(

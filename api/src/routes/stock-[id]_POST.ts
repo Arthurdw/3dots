@@ -51,5 +51,14 @@ export default async (c: Context) => {
     });
   }
 
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      spent: user.spent + spent,
+    },
+  });
+
   return c.json({ symbol, amount, spent });
 };

@@ -3,7 +3,7 @@ import { Jwt as jwt } from "hono/utils/jwt";
 import { db } from "../utils/db";
 import { UserLogin } from "../schema/user-login";
 import { getGoogleTokenData } from "../utils/google";
-import type { ZCtx } from "../types/z";
+import {ZCtx} from "../types/z";
 
 export default async (c: ZCtx<typeof UserLogin>) => {
   const data: z.infer<typeof UserLogin> = c.req.valid("json");
@@ -46,5 +46,6 @@ export default async (c: ZCtx<typeof UserLogin>) => {
   }
 
   const token = await jwt.sign({ user }, <string>c.env.JWT_SECRET);
+  console.log(token)
   return c.json({ token });
 };

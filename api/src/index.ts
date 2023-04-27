@@ -11,6 +11,7 @@ import userGetMe from "./routes/users-me_GET";
 import newsGet from "./routes/news_GET";
 import stockGet from "./routes/stock-[id]_GET"
 import stockBuy from "./routes/stock-[id]_POST"
+import stockSell from "./routes/stock-[id]_DELETE"
 
 const honoClient = new Hono();
 const hono = honoClient.basePath("/api");
@@ -28,5 +29,6 @@ app.get("/users/me", requiresAuth, userGetMe);
 app.get("/news", requiresAuth, newsGet)
 app.get("/stock/:id", requiresAuth, stockGet)
 app.post("/stock/:id", requiresAuth, stockBuy)
+app.delete("/stock/:id", requiresAuth, stockSell)
 
 export default hono;

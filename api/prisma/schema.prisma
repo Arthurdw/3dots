@@ -12,6 +12,8 @@ model User {
   id        String    @id @default(cuid())
   username  String    @unique
   email     String    @unique
+  spent     Float     @default(0)
+  gained    Float     @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
@@ -23,14 +25,4 @@ model Picks {
   spent  Float
 
   @@id([userId, stock])
-}
-
-model NewsItemCache {
-  id          Int     @id @default(autoincrement())
-  title       String
-  snippet     String
-  url         String
-  imageUrl    String
-  source      String
-  dateStr     String
 }

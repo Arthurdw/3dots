@@ -6,7 +6,7 @@ interface ZData<T extends ZodType<any, any, any>> {
   out: { json: T["_output"] };
 }
 
-export type ZCtx<T extends ZodType<any, any, any>> = Context<
+type ZCtx<T extends ZodType<any, any, any>> = Context<
   Env,
   any,
   ZData<T>

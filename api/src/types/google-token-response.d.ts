@@ -1,4 +1,4 @@
-export interface GoogleTokenResponse {
+interface GoogleTokenResponse {
   iss: string;
   azp: string;
   aud: string;

@@ -4,9 +4,8 @@ import { getAuthUser } from "../utils/jwt";
 
 export default async (c: Context) => {
   const prisma = db(c);
-  const user = await prisma.user.findUnique({
-    where: { id: getAuthUser(c).id },
-  });
+  const id = getAuthUser(c).id;
+  const user = await prisma.user.findUnique({ where: { id } });
 
   if (!user) {
     return new Response(
