@@ -15,6 +15,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,8 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.ThreeDotsLayout
-import com.arthurdw.threedots.components.InputField
+import com.arthurdw.threedots.components.ManagedInputField
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 
 @Composable
 fun BaseText(value: String, modifier: Modifier = Modifier) {
@@ -93,6 +95,8 @@ fun SettingsToggle(text: String, onToggle: (Boolean) -> Unit) {
 
 @Composable
 fun SettingsScreen() {
+    val user by remember { derivedStateOf { State.LocalUser } }
+
     ThreeDotsLayout("Settings") {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -105,10 +109,9 @@ fun SettingsScreen() {
                     .padding(top = 16.dp)
             ) {
                 SettingsText("Change username:", Modifier.padding(bottom = 8.dp))
-                InputField(
+                ManagedInputField(
                     onComplete = { /* TODO */ },
                     // TODO: Get this name dynamically
-                    placeholder = "Arthurdw",
                     modifier = Modifier.fillMaxWidth(0.9f),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -135,8 +138,7 @@ fun SettingsScreen() {
                 }
                 SplitBetween {
                     BaseText("User ID:")
-                    // TODO: Get this user id dynamically
-                    SmallText("6e8b6d3a-3b7d-11eb-adc1-0242ac120002")
+                    SmallText(user.id)
                 }
             }
         }

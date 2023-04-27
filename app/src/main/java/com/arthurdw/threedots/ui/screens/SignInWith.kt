@@ -94,7 +94,8 @@ fun SignInScreen(
 ) {
     SignIn(
         uiState = signInViewModel.state,
-        onGoogleTokenReceived = signInViewModel::signIn
+        onGoogleTokenReceived = signInViewModel::signIn,
+        onAlreadyLoggedIn = {}
     )
 }
 
@@ -102,6 +103,7 @@ fun SignInScreen(
 fun SignIn(
     uiState: SignInState,
     onGoogleTokenReceived: (String) -> Unit,
+    onAlreadyLoggedIn: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current as Activity
@@ -120,16 +122,8 @@ fun SignIn(
     isFirstRun = false
 
     if (lastSignInAccount != null) {
-        // TODO: Get user from local database
-        Log.d(
-            "3dots",
-            "LastSignInAccount: ${lastSignInAccount.email} ${lastSignInAccount.givenName}"
-        )
-        Log.d(
-            "3dots",
-            "SignInWith: ${lastSignInAccount.idToken}"
-        )
-        navController.navigate(Screens.Overview.route)
+        // TODO: Get token, and set log in like that from local database
+        onAlreadyLoggedIn(lastSignInAccount.idToken!!)
     }
 
     if (!isDoneProcessing || isLoading.value || uiState is SignInState.Loading) {
@@ -206,7 +200,8 @@ fun SignInWithPreview() {
     PreviewWrapper {
         SignIn(
             uiState = SignInState.Waiting,
-            onGoogleTokenReceived = {}
+            onGoogleTokenReceived = {},
+            onAlreadyLoggedIn = {}
         )
     }
 }
@@ -217,7 +212,8 @@ fun SignInWithPreviewLoading() {
     PreviewWrapper {
         SignIn(
             uiState = SignInState.Loading,
-            onGoogleTokenReceived = {}
+            onGoogleTokenReceived = {},
+            onAlreadyLoggedIn = {}
         )
     }
 }
@@ -228,7 +224,8 @@ fun SignInWithPreviewError() {
     PreviewWrapper {
         SignIn(
             uiState = SignInState.Error("An unknown error occurred"),
-            onGoogleTokenReceived = {}
+            onGoogleTokenReceived = {},
+            onAlreadyLoggedIn = {}
         )
     }
 }

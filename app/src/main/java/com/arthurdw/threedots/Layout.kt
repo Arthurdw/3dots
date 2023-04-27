@@ -1,5 +1,8 @@
 package com.arthurdw.threedots
 
+import android.content.res.Resources
+import android.util.DisplayMetrics
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,6 +43,7 @@ import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
 import com.arthurdw.threedots.utils.createGoogleSignInClient
+
 
 @Composable
 fun QuickNav() {
@@ -140,8 +144,8 @@ fun VerticalDivider(modifier: Modifier = Modifier) {
 
 @Composable
 fun Sidebar(onClose: () -> Unit) {
-    val configuration = LocalConfiguration.current
-    val screenHeight = configuration.screenHeightDp.dp
+    val displayMetrics = Resources.getSystem().displayMetrics
+    val screenHeight = displayMetrics.heightPixels / displayMetrics.density
     val navController = State.NavController.current
     val context = LocalContext.current
 
@@ -172,7 +176,7 @@ fun Sidebar(onClose: () -> Unit) {
 
     Row(
         modifier = Modifier
-            .height(screenHeight - 116.dp)
+            .height(screenHeight.dp - 92.dp)
             .background(MaterialTheme.colorScheme.background)
             .zIndex(1000f)
     ) {

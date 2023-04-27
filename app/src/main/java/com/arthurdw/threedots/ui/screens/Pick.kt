@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.InputField
+import com.arthurdw.threedots.components.ManagedInputField
 import com.arthurdw.threedots.objects.BasicStock
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toCurrencyString
@@ -73,7 +74,8 @@ fun PickScreen(stockId: String, sell: Boolean = false) {
 //            }
             Text("Price", fontWeight = FontWeight.Bold)
             if (editingPrice) {
-                InputField(
+                editingAmount = false
+                ManagedInputField(
                     onComplete = {
                         val changed = it.toFloat()
 
@@ -101,7 +103,8 @@ fun PickScreen(stockId: String, sell: Boolean = false) {
             }
             Text("Amount", fontWeight = FontWeight.Bold)
             if (editingAmount) {
-                InputField(
+                editingPrice = false
+                ManagedInputField(
                     onComplete = {
                         val changed = it.toFloat()
 

@@ -2,12 +2,12 @@ package com.arthurdw.threedots.components
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +22,7 @@ import com.arthurdw.threedots.utils.empty
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputField(
+fun ManagedInputField(
     onComplete: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
@@ -32,21 +32,45 @@ fun InputField(
     value: String = String.empty(),
     colorsOverride: TextFieldColors? = null,
 ) {
-    val focusManager = LocalFocusManager.current
-
     var query by remember { mutableStateOf(value) }
 
-    OutlinedTextField(
+    InputField(
         value = query,
-        onValueChange = {
-            query = it
-        },
+        onComplete = onComplete,
+        placeholder = placeholder,
+        onValueChange = { query = it },
+        trailingIcon = trailingIcon,
+        imeAction = imeAction,
+        keyboardType = keyboardType,
+        colorsOverride = colorsOverride,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InputField(
+    onComplete: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    imeAction: ImeAction = ImeAction.Done,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    value: String = String.empty(),
+    colorsOverride: TextFieldColors? = null,
+    onValueChange: (String) -> Unit
+) {
+    val focusManager = LocalFocusManager.current
+
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
         singleLine = true,
         keyboardActions = KeyboardActions(
             onAny = {
                 focusManager.clearFocus()
-                onComplete(query)
+                onComplete(value)
             }
         ),
         placeholder = { if (placeholder != null) Text(text = placeholder) },
