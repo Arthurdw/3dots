@@ -1,4 +1,4 @@
-import { GoogleTokenResponse } from "../types/google-token-response";
+import type { GoogleTokenResponse } from "../types/google-token-response";
 
 export const getGoogleTokenData = async (
   token: string

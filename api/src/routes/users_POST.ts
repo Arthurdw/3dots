@@ -3,7 +3,7 @@ import { Jwt as jwt } from "hono/utils/jwt";
 import { db } from "../utils/db";
 import { UserLogin } from "../schema/user-login";
 import { getGoogleTokenData } from "../utils/google";
-import { ZCtx } from "../types/z";
+import type { ZCtx } from "../types/z";
 
 export default async (c: ZCtx<typeof UserLogin>) => {
   const data: z.infer<typeof UserLogin> = c.req.valid("json");
