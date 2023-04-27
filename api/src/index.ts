@@ -9,6 +9,7 @@ import { requiresAuth } from "./middleware/requires-auth";
 import userLoginOrRegister from "./routes/users_POST";
 import userGetMe from "./routes/users-me_GET";
 import newsGet from "./routes/news_GET";
+import stockGet from "./routes/stock-[id]_GET"
 
 const honoClient = new Hono();
 const hono = honoClient.basePath("/api");
@@ -24,4 +25,6 @@ hono.get("/", (c) =>
 app.post("/users", zValidator("json", UserLogin), userLoginOrRegister);
 app.get("/users/me", requiresAuth, userGetMe);
 app.get("/news", requiresAuth, newsGet)
+app.get("/stock/:id", requiresAuth, stockGet)
+
 export default hono;

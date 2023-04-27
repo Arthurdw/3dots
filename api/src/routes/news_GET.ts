@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import {cachedFetch} from "../utils/cache";
 
 const makeNewsUrl = (token: string) =>
   `https://api.marketaux.com/v1/news/all?api_token=${token}&domains=fool.com,economist.com`;
@@ -7,14 +8,7 @@ const makeNewsRequest = async (
   baseUrl: string,
   page: number
 ): Promise<NewsResponse> => {
-  const url = new URL(`${baseUrl}&page=${page}`);
-  const response = await fetch(url.toString(), {
-    cf: {
-      cacheTtl: 60 * 60,
-      cacheEverything: true,
-      cacheKey: url.toString(),
-    },
-  });
+  const response = await cachedFetch(`${baseUrl}&page=${page}`)
   return (await response.json()) as NewsResponse;
 };
 
