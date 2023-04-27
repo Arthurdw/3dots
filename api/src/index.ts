@@ -5,9 +5,10 @@ import { logger } from "hono/logger";
 import { etag } from "hono/etag";
 import { zValidator } from "@hono/zod-validator";
 import { UserLogin } from "./schema/user-login";
+import { requiresAuth } from "./middleware/requires-auth";
 import userLoginOrRegister from "./routes/users_POST";
 import userGetMe from "./routes/users-me_GET";
-import { requiresAuth } from "./middleware/requires-auth";
+import newsGet from "./routes/news_GET";
 
 const honoClient = new Hono();
 const hono = honoClient.basePath("/api");
@@ -22,4 +23,5 @@ hono.get("/", (c) =>
 
 app.post("/users", zValidator("json", UserLogin), userLoginOrRegister);
 app.get("/users/me", requiresAuth, userGetMe);
+app.get("/news", requiresAuth, newsGet)
 export default hono;
