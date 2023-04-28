@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.arthurdw.threedots.ui.ThreeDotsApp
-import com.arthurdw.threedots.ui.screens.SignInScreen
+import com.arthurdw.threedots.ui.screens.signin.SignInScreen
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.google.android.gms.common.GoogleApiAvailability
 

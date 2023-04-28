@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.ThreeDotsLayout
-import com.arthurdw.threedots.objects.OwnedStock
-import com.arthurdw.threedots.objects.StockDetails
+import com.arthurdw.threedots.data.objects.OwnedStock
+import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.PreviewWrapper

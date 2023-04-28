@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.signin
 
 import android.util.Log
 import androidx.compose.runtime.getValue

@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.news
 
 import android.content.Intent
 import android.net.Uri
@@ -35,11 +35,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import com.arthurdw.threedots.ThreeDotsLayout
+import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Ripple
-import com.arthurdw.threedots.objects.NewsItem
+import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.utils.toDateString
 import java.lang.Float.min
 
@@ -130,57 +132,39 @@ fun NewsItemRepresentation(
 }
 
 @Composable
-fun NewsScreen() {
+fun News(
+    uiState: NewsState.Success,
+    modifier: Modifier = Modifier,
+) {
     val scrollState = rememberScrollState()
 
-    val news = listOf(
-        NewsItem(
-            title = "Top 7 valued firms together add ₹ 67,859.77 cr in Mcap; check list here",
-            snippet = "A total of seven firms, out of the top 10 most valuable companies, together added ₹67,859.77 crore in market valuation in a holiday-shortened last week, with ...",
-            url = "https://www.livemint.com/news/india/top-7-valued-firms-together-add-rs-67-859-77-cr-in-mcap-check-list-here-11681623243289.html",
-            imageUrl = "httpps://www.livemint.com/lm-img/img/2023/04/16/600x338/ICICI_Bank_1681624374093_1681624374296_1681624374296.jpg",
-            source = "livemint.com",
-            dateStr = "2023-04-16T05:56:31.000000Z"
-        ),
-        NewsItem(
-            title = "Mcap of seven of top-10 most valued firms climb Rs 67,859.77 cr; ICICI Bank, HDFC Bank shine",
-            snippet = "Seven of the top-10 most valued firms together added Rs 67,859.77 crore in market valuation in a holiday-shortened last week, with ICICI Bank and HDFC Bank emer...",
-            url = "https://economictimes.indiatimes.com/markets/stocks/news/mcap-of-seven-of-top-10-most-valued-firms-climb-rs-67859-77-cr-icici-bank-hdfc-bank-shine/articleshow/99529850.cms",
-            imageUrl = "https://img.etimg.com/thumb/msid-99529868,width-1070,height-580,imgsize-32610,overlay-etmarkets/photo.jpg",
-            source = "economictimes.indiatimes.com",
-            dateStr = "2023-04-16T05:17:59.000000Z"
-        ),
-        NewsItem(
-            title = "Top 7 valued firms together add ₹ 67,859.77 cr in Mcap; check list here",
-            snippet = "A total of seven firms, out of the top 10 most valuable companies, together added ₹67,859.77 crore in market valuation in a holiday-shortened last week, with ...",
-            url = "https://www.livemint.com/news/india/top-7-valued-firms-together-add-rs-67-859-77-cr-in-mcap-check-list-here-11681623243289.html",
-            imageUrl = "https://www.livemint.com/lm-img/img/2023/04/16/600x338/ICICI_Bank_1681624374093_1681624374296_1681624374296.jpg",
-            source = "livemint.com",
-            dateStr = "2023-04-16T05:56:31.000000Z"
-        ),
-        NewsItem(
-            title = "Mcap of seven of top-10 most valued firms climb Rs 67,859.77 cr; ICICI Bank, HDFC Bank shine",
-            snippet = "Seven of the top-10 most valued firms together added Rs 67,859.77 crore in market valuation in a holiday-shortened last week, with ICICI Bank and HDFC Bank emer...",
-            url = "https://economictimes.indiatimes.com/markets/stocks/news/mcap-of-seven-of-top-10-most-valued-firms-climb-rs-67859-77-cr-icici-bank-hdfc-bank-shine/articleshow/99529850.cms",
-            imageUrl = "https://img.etimg.com/thumb/msid-99529868,width-1070,height-580,imgsize-32610,overlay-etmarkets/photo.jpg",
-            source = "economictimes.indiatimes.com",
-            dateStr = "2023-04-16T05:17:59.000000Z"
-        )
-    )
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 16.dp)
+            .verticalScroll(scrollState),
+    ) {
+        uiState.newsItems.forEach {
+            Spacer(modifier = Modifier.height(12.dp))
+            NewsItemRepresentation(it)
+        }
+    }
+}
+
+@Composable
+fun NewsScreen(
+    newsViewModel: NewsViewModel = viewModel(factory = NewsViewModel.Factory),
+    modifier: Modifier = Modifier,
+) {
+    val state = newsViewModel.state
 
     ThreeDotsLayout("News") {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 16.dp)
-                .verticalScroll(scrollState),
-        ) {
-            news.forEach {
-                Spacer(modifier = Modifier.height(12.dp))
-                NewsItemRepresentation(it)
-            }
+        when (state) {
+            is NewsState.Success -> News(state)
+            is NewsState.Error -> Text(text = "Error")
+            is NewsState.Loading -> Loading()
         }
     }
 }

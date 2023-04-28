@@ -24,9 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.arthurdw.threedots.ThreeDotsLayout
-import com.arthurdw.threedots.components.InputField
 import com.arthurdw.threedots.components.ManagedInputField
-import com.arthurdw.threedots.objects.BasicStock
+import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.toCurrencyString
 

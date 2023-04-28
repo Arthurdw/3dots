@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.signin
 
 import android.annotation.SuppressLint
 import android.app.Activity

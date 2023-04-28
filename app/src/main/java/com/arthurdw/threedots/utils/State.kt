@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import com.arthurdw.threedots.objects.User
+import com.arthurdw.threedots.data.objects.User
 
 object State {
     val NavController = compositionLocalOf<NavController> { error("No NavController found!") }
