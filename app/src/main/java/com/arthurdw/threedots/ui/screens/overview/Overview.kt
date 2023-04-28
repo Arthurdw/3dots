@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.overview
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,9 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.ThreeDotsLayout
+import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Stock
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.data.objects.toBasicStocks
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
@@ -61,16 +64,14 @@ fun StocksSection(title: String, data: List<BasicStock>, modifier: Modifier = Mo
     }
 }
 
-
 @Composable
-fun OverviewScreen(userId: String?) {
+fun OverviewScreen(
+    userId: String? = null,
+    overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory),
+    modifier: Modifier = Modifier,
+) {
     // TODO: Check if QR code is valid (user with id exists)
     // TODO: Get data from user with id
-    val worthData = listOf(
-        107423f, 102772f, 104625f, 108720f, 111021f, 105459f, 108591f, 119075f, 117689f, 110650f,
-        115683f, 124708f, 118317f,
-    )
-    val worth = entryModelOf(*worthData.toTypedArray())
 
     val pickedStocks = listOf(
         BasicStock("Alphabet", "GOOGL", 15 * 93.65f, 15 * 86.7f),
@@ -90,6 +91,9 @@ fun OverviewScreen(userId: String?) {
     val scrollState = rememberScrollState()
     val user by remember { derivedStateOf { State.LocalUser } }
 
+    val worthState = overviewViewModel.worthState
+    val pickedStocksState = overviewViewModel.pickedStocksState
+
     ThreeDotsLayout(user.username) {
         Column(
             modifier = Modifier
@@ -98,25 +102,42 @@ fun OverviewScreen(userId: String?) {
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ProvideChartStyle(rememberChartStyle()) {
-                Chart(
-                    chart = lineChart(
-                        axisValuesOverrider = AxisValuesOverrider.fixed(
-                            minY = worthData.min(),
-                            maxY = worthData.max()
+            when (worthState) {
+                is WorthState.Loading -> Loading()
+                is WorthState.Error -> Text(text = "Error")
+                is WorthState.Success -> {
+                    val worth = worthState.value
+                    ProvideChartStyle(rememberChartStyle()) {
+                        Chart(
+                            chart = lineChart(
+                                axisValuesOverrider = AxisValuesOverrider.fixed(
+                                    minY = worth.min(),
+                                    maxY = worth.max()
+                                )
+                            ),
+                            model = entryModelOf(*worth.toTypedArray()),
+                            endAxis = endAxis(),
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
                         )
-                    ),
-                    model = worth,
-                    endAxis = endAxis(),
-                    modifier = Modifier.fillMaxWidth(0.9f),
-                    chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
-                )
+                    }
+                }
             }
 
             BalanceStatistic("Spent:", user.spent, modifier = Modifier.padding(top = 20.dp))
             BalanceStatistic("Gained:", user.gained)
 
-            StocksSection("Picked stocks", pickedStocks, modifier = Modifier.padding(top = 20.dp))
+            when (pickedStocksState) {
+                is PickedStocksState.Loading -> Loading()
+                is PickedStocksState.Error -> Text(text = "Error")
+                is PickedStocksState.Success ->
+                    StocksSection(
+                        "Picked stocks",
+                        pickedStocksState.value.toBasicStocks(),
+                        modifier = Modifier.padding(top = 20.dp)
+                    )
+            }
+
             StocksSection(
                 "Followed stocks",
                 followedStocks,

@@ -15,7 +15,7 @@ import retrofit2.HttpException
 private const val UNKNOWN_ERROR = "Unknown error"
 private const val BASE_ERROR = "An error occurred while fetching a resource: "
 
-abstract class BaseViewModel<T>(protected val repository: Repository) : ViewModel() {
+abstract class BaseViewModel : ViewModel() {
     private fun throwException(message: String, onError: (String) -> Unit) {
         val currentClassName = this::class.java.simpleName
         Log.e(currentClassName, message)
@@ -42,8 +42,7 @@ abstract class BaseViewModel<T>(protected val repository: Repository) : ViewMode
     }
 
     companion object {
-        inline fun <reified VM : BaseViewModel<U>, U> createFactory(): ViewModelProvider.Factory {
-            Log.d("3dots", "createFactory: ${VM::class.java}")
+        inline fun <reified VM : BaseViewModel> createFactory(): ViewModelProvider.Factory {
             return viewModelFactory {
                 initializer {
                     val application = (this[APPLICATION_KEY] as ThreeDotsApplication)

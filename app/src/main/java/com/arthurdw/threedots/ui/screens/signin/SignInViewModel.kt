@@ -14,7 +14,7 @@ sealed interface SignInState {
     data class Error(val message: String) : SignInState
 }
 
-class SignInViewModel(repository: Repository) : BaseViewModel<SignInState>(repository) {
+class SignInViewModel(private val repository: Repository) : BaseViewModel() {
     var state: SignInState by mutableStateOf(SignInState.Waiting)
         private set
 
@@ -29,6 +29,6 @@ class SignInViewModel(repository: Repository) : BaseViewModel<SignInState>(repos
     }
 
     companion object {
-        val Factory = createFactory<SignInViewModel, SignInState>()
+        val Factory = createFactory<SignInViewModel>()
     }
 }

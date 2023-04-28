@@ -13,7 +13,7 @@ sealed interface NewsState {
     data class Error(val message: String) : NewsState
 }
 
-class NewsViewModel(repository: Repository) : BaseViewModel<NewsState>(repository) {
+class NewsViewModel(private val repository: Repository) : BaseViewModel() {
     var state: NewsState by mutableStateOf(NewsState.Loading)
         private set
 
@@ -29,6 +29,6 @@ class NewsViewModel(repository: Repository) : BaseViewModel<NewsState>(repositor
     }
 
     companion object {
-        val Factory = createFactory<NewsViewModel, NewsState>()
+        val Factory = createFactory<NewsViewModel>()
     }
 }

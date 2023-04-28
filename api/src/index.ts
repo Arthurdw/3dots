@@ -33,12 +33,12 @@ hono.get("/", (c) =>
 app.post("/users", zValidator("json", UserLogin), userLoginOrRegister);
 app.get("/users/me", requiresAuth, userGetMe);
 app.get("/users/me/worth", requiresAuth, usersMeWorth);
+app.get("/users/me/picked", requiresAuth, userStocks);
 app.get("/users/me/followed", requiresAuth, userGetFollowedStocks);
 app.get("/news", requiresAuth, newsGet)
 app.get("/stock/:id", requiresAuth, stockGet)
 app.post("/stock/:id", requiresAuth, stockBuy)
 app.delete("/stock/:id", requiresAuth, stockSell)
-app.get("/stocks/picked", requiresAuth, userStocks);
 app.get("/stocks", requiresAuth, searchStocks)
 app.put("/stock/:id/follow", requiresAuth, followStock)
 app.delete("/stock/:id/follow", requiresAuth, unfollowStock)
