@@ -19,6 +19,8 @@ interface Repository {
     suspend fun getFollowed(): List<BasicStock>
     suspend fun getStockStatus(symbol: String): StockStatus
     suspend fun getStock(symbol: String): StockDetails
+    suspend fun followStock(symbol: String)
+    suspend fun unfollowStock(symbol: String)
 }
 
 class NetworkRepository(
@@ -56,5 +58,13 @@ class NetworkRepository(
 
     override suspend fun getStock(symbol: String): StockDetails {
         return protectedApiService.getStock(symbol)
+    }
+
+    override suspend fun followStock(symbol: String) {
+        protectedApiService.followStock(symbol)
+    }
+
+    override suspend fun unfollowStock(symbol: String) {
+        protectedApiService.unfollowStock(symbol)
     }
 }

@@ -17,7 +17,6 @@ data class StockStatusFollowed(
     @SerialName("stock")
     val symbol: String,
     val stockName: String,
-    val amount: Float,
 )
 
 @Serializable

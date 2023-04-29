@@ -75,7 +75,10 @@ fun DataSection(title: String, data: Map<String, String>, modifier: Modifier = M
                     modifier = Modifier.padding(end = 8.dp),
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = value, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    text = value,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
             }
         }
     }
@@ -85,6 +88,8 @@ fun DataSection(title: String, data: Map<String, String>, modifier: Modifier = M
 fun StockDetailsContent(
     stock: StockDetails,
     stockStatus: StockStatusState,
+    onStockFollow: () -> Unit,
+    onStockUnfollow: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
@@ -117,8 +122,10 @@ fun StockDetailsContent(
         Spacer(modifier = Modifier.height(16.dp))
         when (stockStatus) {
             is StockStatusState.Error -> Text(stockStatus.message)
+            is StockStatusState.Loading -> {}
             is StockStatusState.Success -> {
                 val picked = stockStatus.status.picked
+                val followed = stockStatus.status.followed
 
                 if (picked != null) {
                     DataSection(
@@ -136,18 +143,28 @@ fun StockDetailsContent(
                     Spacer(modifier = Modifier.height(8.dp))
                     StockButton(
                         text = "SELL",
-                        onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol, true)) })
+                        onClick = {
+                            navController.navigate(
+                                Screens.Pick.withArgs(
+                                    stock.symbol,
+                                    true
+                                )
+                            )
+                        })
+                } else {
+                    StockButton(
+                        text = "PICK",
+                        onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+                if (followed != null) {
+                    StockButton(text = "Remove from watchlist", onClick = onStockUnfollow)
+                } else {
+                    StockButton(text = "Add to watchlist", onClick = onStockFollow)
                 }
             }
-
-            else -> {
-                StockButton(
-                    text = "PICK",
-                    onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
-            }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        StockButton(text = "Add to watchlist", onClick = { /*TODO*/ })
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
             title = "General",
@@ -255,6 +272,8 @@ fun StockDetailsScreen(
                 StockDetailsContent(
                     stock = stockDetailsState.stock,
                     stockStatus = stockStatusState,
+                    onStockFollow = { stockDetailsViewModel.follow(stockSymbol) },
+                    onStockUnfollow = { stockDetailsViewModel.unfollow(stockSymbol) },
                     modifier = modifier
                 )
             }

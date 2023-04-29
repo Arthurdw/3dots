@@ -7,7 +7,9 @@ import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.data.objects.StockStatus
 import com.arthurdw.threedots.data.objects.User
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ProtectedApiService {
@@ -25,4 +27,8 @@ interface ProtectedApiService {
     suspend fun getStock(@Path("id") id: String): StockDetails
     @GET("$PREFIX/stock/{id}/status")
     suspend fun getStockStatus(@Path("id") id: String): StockStatus
+    @PUT("$PREFIX/stock/{id}/follow")
+    suspend fun followStock(@Path("id") id: String)
+    @DELETE("$PREFIX/stock/{id}/follow")
+    suspend fun unfollowStock(@Path("id") id: String)
 }

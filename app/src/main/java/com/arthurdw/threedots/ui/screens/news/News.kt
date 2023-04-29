@@ -57,10 +57,6 @@ fun NewsItemRepresentation(
         targetValue = if (state !is AsyncImagePainter.State.Loading) 1f else 0f
     )
 
-    Log.d("3dot", "NewsItemRepresentation: ${painter.state is AsyncImagePainter.State.Loading}")
-    Log.d("3dot", "NewsItemRepresentation 2: ${painter.state is AsyncImagePainter.State.Success}")
-    Log.d("3dot", "NewsItemRepresentation 3: ${painter.state}")
-
     @Composable
     fun ArticleDetails() {
         Spacer(modifier = Modifier.height(8.dp))

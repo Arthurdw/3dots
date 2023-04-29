@@ -23,6 +23,8 @@ export default async (c: Context) => {
   const currentIntraday = intradayDataExtracted[0];
   const intraday = intradayDataExtracted.map((d) => parseFloat(d["2. high"]));
 
+  console.log(JSON.stringify(overviewData))
+
   return c.json({
     ...overviewData,
     intraday,
