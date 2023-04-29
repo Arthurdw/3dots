@@ -3,6 +3,8 @@ package com.arthurdw.threedots.data.objects
 import com.arthurdw.threedots.utils.toPercentageString
 import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.util.Date
 import kotlin.math.roundToInt
 
@@ -11,14 +13,20 @@ abstract class Roi {
     abstract val lastPrice: Float
 
     val roi: Float
-        get() = (price - lastPrice) / lastPrice * 100
+        get() {
+            val estimatedRoi = (price - lastPrice) / lastPrice * 100
+            return if (estimatedRoi.isNaN()) 0f else estimatedRoi
+        }
 
     val roiFormatted: String
         get() = ((roi * 100).roundToInt().toFloat() / 100).toPercentageString()
 }
 
+@Serializable
 data class BasicStock(
+    @SerialName("stockName")
     val name: String,
+    @SerialName("stock")
     val symbol: String,
     override val price: Float,
     override val lastPrice: Float

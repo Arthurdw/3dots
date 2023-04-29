@@ -73,11 +73,6 @@ fun OverviewScreen(
     // TODO: Check if QR code is valid (user with id exists)
     // TODO: Get data from user with id
 
-    val pickedStocks = listOf(
-        BasicStock("Alphabet", "GOOGL", 15 * 93.65f, 15 * 86.7f),
-        BasicStock("Apple", "AAPL", 15 * 168.56f, 15 * 121.4f),
-    )
-
     val followedStocks = listOf(
         BasicStock("Alphabet", "GOOGL", 93.65f, 101.7f),
         BasicStock("Amazon", "AMZN", 331.48f, 309.04f),
@@ -93,6 +88,7 @@ fun OverviewScreen(
 
     val worthState = overviewViewModel.worthState
     val pickedStocksState = overviewViewModel.pickedStocksState
+    val followedStocksState = overviewViewModel.followedStocksState
 
     ThreeDotsLayout(user.username) {
         Column(
@@ -138,11 +134,16 @@ fun OverviewScreen(
                     )
             }
 
-            StocksSection(
-                "Followed stocks",
-                followedStocks,
-                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
-            )
+            when (followedStocksState) {
+                is FollowedStocksState.Loading -> Loading()
+                is FollowedStocksState.Error -> Text(text = "Error")
+                is FollowedStocksState.Success ->
+                    StocksSection(
+                        "Followed stocks",
+                        followedStocksState.value,
+                        modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+                    )
+            }
         }
     }
 }

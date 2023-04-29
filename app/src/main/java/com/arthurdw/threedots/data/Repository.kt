@@ -1,5 +1,6 @@
 package com.arthurdw.threedots.data
 
+import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.data.objects.LoginData
 import com.arthurdw.threedots.data.objects.NewsItem
@@ -13,6 +14,7 @@ interface Repository {
     suspend fun getNews(): List<NewsItem>
     suspend fun getWorth(): List<Float>
     suspend fun getStocks(): List<PickedStock>
+    suspend fun getFollowed(): List<BasicStock>
 }
 
 class NetworkRepository(
@@ -38,5 +40,9 @@ class NetworkRepository(
 
     override suspend fun getStocks(): List<PickedStock> {
         return protectedApiService.getStocks()
+    }
+
+    override suspend fun getFollowed(): List<BasicStock> {
+        return protectedApiService.getFollowed()
     }
 }

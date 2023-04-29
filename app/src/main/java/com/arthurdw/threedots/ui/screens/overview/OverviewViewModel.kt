@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.utils.BaseViewModel
 
@@ -19,6 +20,13 @@ sealed interface PickedStocksState {
     data class Error(val message: String) : PickedStocksState
 }
 
+
+sealed interface FollowedStocksState {
+    object Loading : FollowedStocksState
+    data class Success(val value: List<BasicStock>) : FollowedStocksState
+    data class Error(val message: String) : FollowedStocksState
+}
+
 class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
     var worthState: WorthState by mutableStateOf(WorthState.Loading)
         private set
@@ -26,9 +34,13 @@ class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
     var pickedStocksState: PickedStocksState by mutableStateOf(PickedStocksState.Loading)
         private set
 
+    var followedStocksState: FollowedStocksState by mutableStateOf(FollowedStocksState.Loading)
+        private set
+
     init {
         getWorth()
         getStocks()
+        getFollowed()
     }
 
     private fun getWorth() {
@@ -44,6 +56,14 @@ class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
             pickedStocksState = PickedStocksState.Loading
             val stocks = repository.getStocks()
             pickedStocksState = PickedStocksState.Success(stocks)
+        }
+    }
+
+    private fun getFollowed() {
+        wrapRepositoryAction({ followedStocksState = FollowedStocksState.Error(it) }) {
+            followedStocksState = FollowedStocksState.Loading
+            val stocks = repository.getFollowed()
+            followedStocksState = FollowedStocksState.Success(stocks)
         }
     }
 

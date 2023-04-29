@@ -1,6 +1,7 @@
 package com.arthurdw.threedots.network
 
 import com.arthurdw.threedots.data.DefaultAppContainer.Companion.PREFIX
+import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.data.objects.User
@@ -15,4 +16,6 @@ interface ProtectedApiService {
     suspend fun getWorth(): List<Float>
     @GET("$PREFIX/users/me/picked")
     suspend fun getStocks(): List<PickedStock>
+    @GET("$PREFIX/users/me/followed")
+    suspend fun getFollowed(): List<BasicStock>
 }
