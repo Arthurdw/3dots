@@ -1,6 +1,6 @@
 package com.arthurdw.threedots.data.objects
 
-import com.arthurdw.threedots.utils.DateSerializer
+import com.arthurdw.threedots.utils.DateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.util.Date
 
@@ -12,10 +12,10 @@ data class User(
     val spent: Float,
     val gained: Float,
 
-    @Serializable(with = DateSerializer::class)
+    @Serializable(with = DateTimeSerializer::class)
     val createdAt: Date,
 
-    @Serializable(with = DateSerializer::class)
+    @Serializable(with = DateTimeSerializer::class)
     val updatedAt: Date
 ) {
     companion object {

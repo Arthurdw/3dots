@@ -15,6 +15,7 @@ import newsGet from "./routes/news_GET";
 import stockGet from "./routes/stock-[id]_GET"
 import stockBuy from "./routes/stock-[id]_POST"
 import stockSell from "./routes/stock-[id]_DELETE"
+import stockStatus from "./routes/stock-[id]-status_GET"
 import searchStocks from "./routes/stocks_GET"
 import followStock from "./routes/stock-[id]-follow_PUT"
 import unfollowStock from "./routes/stock-[id]-follow_DELETE"
@@ -36,10 +37,11 @@ app.get("/users/me/worth", requiresAuth, usersMeWorth);
 app.get("/users/me/picked", requiresAuth, userStocks);
 app.get("/users/me/followed", requiresAuth, userGetFollowedStocks);
 app.get("/news", requiresAuth, newsGet)
+app.get("/stocks", requiresAuth, searchStocks)
 app.get("/stock/:id", requiresAuth, stockGet)
 app.post("/stock/:id", requiresAuth, stockBuy)
 app.delete("/stock/:id", requiresAuth, stockSell)
-app.get("/stocks", requiresAuth, searchStocks)
+app.get("/stock/:id/status", requiresAuth, stockStatus)
 app.put("/stock/:id/follow", requiresAuth, followStock)
 app.delete("/stock/:id/follow", requiresAuth, unfollowStock)
 

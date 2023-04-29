@@ -21,7 +21,9 @@ internal fun Float.toPercentageString(): String {
     return "$prefix${this}%"
 }
 
-internal fun Date.toDateString(): String {
+internal fun Date?.toDateString(): String {
+    if (this == null) return "N/A"
+
     val format = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     return format.format(this)
 }

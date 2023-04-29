@@ -19,7 +19,7 @@ import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen
 import com.arthurdw.threedots.ui.screens.signin.SignInScreen
-import com.arthurdw.threedots.ui.screens.StockDetailsScreen
+import com.arthurdw.threedots.ui.screens.details.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.StocksScreen
 import com.arthurdw.threedots.ui.screens.Unlock
 import com.arthurdw.threedots.utils.State
