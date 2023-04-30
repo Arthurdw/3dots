@@ -1,8 +1,6 @@
 package com.arthurdw.threedots
 
 import android.content.res.Resources
-import android.util.DisplayMetrics
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
@@ -143,11 +142,14 @@ fun VerticalDivider(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Sidebar(onClose: () -> Unit) {
+fun Sidebar(
+    modifier: Modifier = Modifier,
+    onClose: () -> Unit = {},
+    onSignOut: () -> Unit = {},
+) {
     val displayMetrics = Resources.getSystem().displayMetrics
     val screenHeight = displayMetrics.heightPixels / displayMetrics.density
     val navController = State.NavController.current
-    val context = LocalContext.current
 
     data class NavItem(val text: String, val screen: Screens)
 
@@ -234,11 +236,7 @@ fun Sidebar(onClose: () -> Unit) {
                     "Logout",
                     Screens.SignInWith,
                     modifier = Modifier.padding(bottom = 16.dp),
-                    onClick = {
-                        val googleSignInClient = createGoogleSignInClient(context)
-                        googleSignInClient.signOut()
-                        // TODO: Remove local data
-                    }
+                    onClick = onSignOut
                 )
             }
         }
@@ -252,7 +250,13 @@ fun Sidebar(onClose: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThreeDotsLayout(title: String? = null, content: @Composable () -> Unit) {
+fun ThreeDotsLayout(
+    title: String? = null,
+    layoutViewModel: LayoutViewModel = viewModel(factory = LayoutViewModel.Factory),
+    content: @Composable () -> Unit,
+) {
+    val context = LocalContext.current
+    val navController = State.NavController.current
     val isSidebarOpen = remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
@@ -268,7 +272,15 @@ fun ThreeDotsLayout(title: String? = null, content: @Composable () -> Unit) {
                 content()
             }
 
-            if (isSidebarOpen.value) Sidebar { isSidebarOpen.value = false }
+            if (isSidebarOpen.value) Sidebar(
+                onClose = { isSidebarOpen.value = false },
+                onSignOut = {
+                    val googleSignInClient = createGoogleSignInClient(context)
+                    googleSignInClient.signOut()
+                    layoutViewModel.signOut()
+                    navController.navigate(Screens.SignInWith.route)
+                }
+            )
         })
     }
 }

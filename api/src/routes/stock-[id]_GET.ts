@@ -17,6 +17,7 @@ export default async (c: Context) => {
       ...intradayData,
     });
   } catch (err) {
+    console.error(err);
     return c.json(
       { message: "Could not get stock details, please try again." },
       { status: 500 }

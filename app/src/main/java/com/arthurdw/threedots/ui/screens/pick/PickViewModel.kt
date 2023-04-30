@@ -3,7 +3,7 @@ package com.arthurdw.threedots.ui.screens.pick
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.data.objects.StockWorth
 import com.arthurdw.threedots.utils.BaseViewModel
 import com.arthurdw.threedots.utils.State
@@ -15,7 +15,7 @@ sealed interface PickState {
     data class Error(val message: String) : PickState
 }
 
-class PickViewModel(private val repository: Repository) : BaseViewModel() {
+class PickViewModel(private val networkRepository: NetworkRepository) : BaseViewModel() {
     var state: PickState by mutableStateOf(PickState.Loading)
         private set
 
@@ -29,20 +29,20 @@ class PickViewModel(private val repository: Repository) : BaseViewModel() {
 
     fun buyStock(symbol: String, amount: Float) =
         performAction {
-            repository.buyStock(symbol, amount)
-            State.LocalUser = repository.getMe()
+            networkRepository.buyStock(symbol, amount)
+            State.LocalUser = networkRepository.getMe()
         }
 
     fun sellStock(symbol: String, amount: Float) =
         performAction {
-            repository.sellStock(symbol, amount)
-            State.LocalUser = repository.getMe()
+            networkRepository.sellStock(symbol, amount)
+            State.LocalUser = networkRepository.getMe()
         }
 
     fun initStock(symbol: String) {
         wrapRepositoryAction({ state = PickState.Error(it) }) {
             state = PickState.Loading
-            val stock = repository.getStockWorth(symbol)
+            val stock = networkRepository.getStockWorth(symbol)
             state = PickState.Idle(stock)
         }
     }

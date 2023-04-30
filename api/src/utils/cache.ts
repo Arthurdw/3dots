@@ -2,14 +2,17 @@ import { StockEndpoints } from "./stock-endpoints";
 import { Context } from "hono";
 import { db } from "./db";
 
-export const cachedFetch = async (url: string, time = 60 * 60) =>
-  await fetch(url, {
+export const cachedFetch = async (url: string, time = 60 * 60) => {
+  const res = await fetch(url, {
     cf: {
       cacheTtl: time,
       cacheEverything: true,
       cacheKey: url,
     },
   });
+
+  return res
+}
 
 export const fetchOverview = async (
   c: Context,
@@ -93,6 +96,7 @@ export const fetchIntraday = async (
   );
   const prisma = db(c);
   const val = await res.json();
+
   if (val?.["Note"]) {
     const cachedData = await prisma.stockIntradayCache.findUnique({
       where: {

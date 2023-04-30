@@ -3,7 +3,7 @@ package com.arthurdw.threedots.ui.screens.details
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.data.objects.StockStatus
 import com.arthurdw.threedots.data.objects.StockStatusFollowed
@@ -21,7 +21,7 @@ sealed interface StockStatusState {
     data class Error(val message: String) : StockStatusState
 }
 
-class StockDetailsViewModel(private val repository: Repository) : BaseViewModel() {
+class StockDetailsViewModel(private val networkRepository: NetworkRepository) : BaseViewModel() {
     var stockDetailsState: StockDetailsState by mutableStateOf(StockDetailsState.Loading)
         private set
 
@@ -36,7 +36,7 @@ class StockDetailsViewModel(private val repository: Repository) : BaseViewModel(
     private fun getStockDetails(symbol: String) {
         wrapRepositoryAction({ stockDetailsState = StockDetailsState.Error(it) }) {
             stockDetailsState = StockDetailsState.Loading
-            val stockDetails = repository.getStock(symbol)
+            val stockDetails = networkRepository.getStock(symbol)
             stockDetailsState = StockDetailsState.Success(stockDetails)
         }
     }
@@ -44,7 +44,7 @@ class StockDetailsViewModel(private val repository: Repository) : BaseViewModel(
     private fun getStockStatus(symbol: String) {
         wrapRepositoryAction({ stockStatusState = StockStatusState.Error(it) }) {
             stockStatusState = StockStatusState.Loading
-            val stockStatus = repository.getStockStatus(symbol)
+            val stockStatus = networkRepository.getStockStatus(symbol)
             stockStatusState = StockStatusState.Success(stockStatus)
         }
     }
@@ -63,7 +63,7 @@ class StockDetailsViewModel(private val repository: Repository) : BaseViewModel(
                     )
                 )
             }
-            repository.followStock(symbol)
+            networkRepository.followStock(symbol)
         }
     }
 
@@ -73,7 +73,7 @@ class StockDetailsViewModel(private val repository: Repository) : BaseViewModel(
                 val stockStatus = (stockStatusState as StockStatusState.Success).status
                 stockStatusState = StockStatusState.Success(stockStatus.copy(followed = null))
             }
-            repository.unfollowStock(symbol)
+            networkRepository.unfollowStock(symbol)
         }
     }
 

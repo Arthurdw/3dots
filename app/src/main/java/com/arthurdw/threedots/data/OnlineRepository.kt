@@ -12,7 +12,7 @@ import com.arthurdw.threedots.data.objects.toBasicStock
 import com.arthurdw.threedots.network.ProtectedApiService
 import com.arthurdw.threedots.network.PublicApiService
 
-interface Repository {
+interface NetworkRepository {
     suspend fun loginOrRegister(token: String): String
     suspend fun getMe(): User
     suspend fun getNews(): List<NewsItem>
@@ -29,10 +29,10 @@ interface Repository {
     suspend fun searchStocks(query: String): List<BasicStock>
 }
 
-class NetworkRepository(
+class OnlineRepository(
     private val publicApiService: PublicApiService,
     private val protectedApiService: ProtectedApiService
-) : Repository {
+) : NetworkRepository {
     override suspend fun loginOrRegister(token: String): String {
         val loginData = LoginData(token = token)
         return publicApiService.loginOrRegisterUser(loginData).token

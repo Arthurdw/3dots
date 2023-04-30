@@ -76,6 +76,6 @@ const getDataOfPages = async (
 };
 
 export default async (c: Context) => {
-  const data = await getDataOfPages(c, c.env.NEWS_API_TOKEN, 10);
+  const data = await getDataOfPages(c, c.env.NEWS_API_TOKEN, 5);
   return c.json(data);
 };

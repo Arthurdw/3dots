@@ -53,12 +53,21 @@ export default async (c: Context) => {
       });
     }
 
+    const fetchedUser = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      select: {
+        spent: true,
+      },
+    });
+
     await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
-        spent: user.spent + spent,
+        spent: fetchedUser.spent + spent,
       },
     });
 

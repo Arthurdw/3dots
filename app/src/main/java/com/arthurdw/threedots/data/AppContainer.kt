@@ -1,5 +1,8 @@
 package com.arthurdw.threedots.data
 
+import android.content.Context
+import com.arthurdw.threedots.data.database.SessionDatabase
+import com.arthurdw.threedots.data.database.SettingDatabase
 import com.arthurdw.threedots.network.ProtectedApiService
 import com.arthurdw.threedots.network.PublicApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -10,11 +13,12 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
 interface AppContainer {
-    val repository: Repository
+    val networkRepository: NetworkRepository
+    val offlineRepository: OfflineRepository
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
     companion object {
         const val BASE_URL = "https://3dots.xiler.net"
         const val PREFIX = "/api/v1"
@@ -39,7 +43,14 @@ class DefaultAppContainer : AppContainer {
         retrofit.create(PublicApiService::class.java)
     }
 
-    override val repository: Repository by lazy {
-        NetworkRepository(publicApiService, protectedApiService)
+    override val networkRepository: NetworkRepository by lazy {
+        OnlineRepository(publicApiService, protectedApiService)
+    }
+
+    override val offlineRepository: OfflineRepository by lazy {
+        OfflineRepository(
+            SessionDatabase.getDatabase(context).sessionDao(),
+            SettingDatabase.getDatabase(context).settingsDao()
+        )
     }
 }

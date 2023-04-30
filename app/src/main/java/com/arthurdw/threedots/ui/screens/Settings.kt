@@ -115,7 +115,6 @@ fun SettingsScreen() {
                     modifier = Modifier.fillMaxWidth(0.9f),
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                SettingsToggle("Dark mode:") { /* TODO */ }
                 SettingsToggle("Notifications:") { /* TODO */ }
                 SettingsToggle("Protected:") { /* TODO */ }
             }

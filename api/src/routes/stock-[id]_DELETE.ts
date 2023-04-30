@@ -41,55 +41,84 @@ export default async (c: Context) => {
     );
   }
 
-  let originalSpendPerStock = stock.spent / stock.amount;
-  let gained = quote.price * amount - originalSpendPerStock * amount;
-  let spent = stock.spent - gained;
+  const gained = quote.price * amount;
+  const amountLeft = stock.amount - amount;
 
-  await prisma.picks.update({
-    where: {
-      userId_stock: {
-        stock: symbol,
-        userId: user.id,
+  if (amountLeft === 0) {
+    await prisma.picks.delete({
+      where: {
+        userId_stock: {
+          stock: symbol,
+          userId: user.id,
+        },
       },
-    },
-    data: { amount, spent },
-  });
+    });
+  } else {
+    await prisma.picks.update({
+      where: {
+        userId_stock: {
+          stock: symbol,
+          userId: user.id,
+        },
+      },
+      data: { amount: amountLeft },
+    });
+  }
 
-  const userGained = user.gained + gained;
+  const fetchedUser = await prisma.user.findUnique({
+    where: {
+        id: user.id,
+    },
+    select: {
+        gained: true,
+    }
+  });
 
   await prisma.user.update({
     where: {
       id: user.id,
     },
     data: {
-      gained: userGained,
+      gained: fetchedUser.gained + gained,
     },
   });
+
+  const history = await prisma.portfolioWorthHistory.findMany({
+    where: {
+        userId: user.id,
+    },
+    select: {
+        worth: true,
+    }
+  });
+  const historyWorth = history?.[0]?.worth || 0;
 
   await prisma.portfolioWorthHistory.create({
     data: {
       userId: user.id,
-      worth: userGained,
+      worth: historyWorth + gained,
     },
   });
 
-  await prisma.portfolioWorthHistory.delete({
-    where: {
-      userId_createdAt: {
-        userId: user.id,
-        createdAt: (
-          await prisma.portfolioWorthHistory.findFirst({
-            where: {
-              userId: user.id,
-            },
-            orderBy: {
-              createdAt: "asc",
-            },
-          })
-        ).createdAt,
+  if (history.length > 30) {
+    await prisma.portfolioWorthHistory.delete({
+      where: {
+        userId_createdAt: {
+          userId: user.id,
+          createdAt: (
+              await prisma.portfolioWorthHistory.findFirst({
+                where: {
+                  userId: user.id,
+                },
+                orderBy: {
+                  createdAt: "asc",
+                },
+              })
+          ).createdAt,
+        },
       },
-    },
-  });
+    });
+  }
 
   return c.json({ symbol, amount, gained });
 };

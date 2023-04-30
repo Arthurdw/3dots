@@ -1,5 +1,5 @@
 import { Context } from "hono";
-import { cachedFetch } from "../utils/cache";
+import { cachedFetch, fetchQuote } from "../utils/cache";
 import { StockEndpoints } from "../utils/stock-endpoints";
 
 export default async (c: Context) => {
@@ -20,23 +20,23 @@ export default async (c: Context) => {
 
   const withFinancials = await Promise.all(
     remapped.map(async (d) => {
-      // TODO: Find a way to not have to deal with the api blocking
-      // const financials = await cachedFetch(
-      //   StockEndpoints.QUOTE(d.symbol, c.env.STOCKS_API_TOKEN),
-      //   60 * 30
-      // );
-      //
-      //   const financialsJson: QuoteData = await financials.json();
+      let quote = {
+        price: 0,
+        open: 0,
+      };
+      try {
+        quote = await fetchQuote(c, d.symbol, 60 * 30);
+      } catch (err) {
+        console.debug("Could not fetch quote for symbol", d.symbol);
+      }
 
-        return {
-            ...d,
-          lastPrice: 0,
-            price: 0,
-            // lastPrice: parseFloat(financialsJson["Global Quote"]["02. open"]),
-            // price: parseFloat(financialsJson["Global Quote"]["05. price"]),
-        }
+      return {
+        ...d,
+        price: quote.price,
+        lastPrice: quote.open,
+      };
     })
   );
 
-  return c.json(withFinancials)
+  return c.json(withFinancials);
 };

@@ -3,7 +3,7 @@ package com.arthurdw.threedots.ui.screens.overview
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.utils.BaseViewModel
@@ -27,7 +27,7 @@ sealed interface FollowedStocksState {
     data class Error(val message: String) : FollowedStocksState
 }
 
-class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
+class OverviewViewModel(private val networkRepository: NetworkRepository) : BaseViewModel() {
     var worthState: WorthState by mutableStateOf(WorthState.Loading)
         private set
 
@@ -46,7 +46,7 @@ class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
     private fun getWorth() {
         wrapRepositoryAction({ worthState = WorthState.Error(it) }) {
             worthState = WorthState.Loading
-            val worth = repository.getWorth()
+            val worth = networkRepository.getWorth()
             worthState = WorthState.Success(worth)
         }
     }
@@ -54,7 +54,7 @@ class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
     private fun getStocks() {
         wrapRepositoryAction({ pickedStocksState = PickedStocksState.Error(it) }) {
             pickedStocksState = PickedStocksState.Loading
-            val stocks = repository.getStocks()
+            val stocks = networkRepository.getStocks()
             pickedStocksState = PickedStocksState.Success(stocks)
         }
     }
@@ -62,7 +62,7 @@ class OverviewViewModel(private val repository: Repository) : BaseViewModel() {
     private fun getFollowed() {
         wrapRepositoryAction({ followedStocksState = FollowedStocksState.Error(it) }) {
             followedStocksState = FollowedStocksState.Loading
-            val stocks = repository.getFollowed()
+            val stocks = networkRepository.getFollowed()
             followedStocksState = FollowedStocksState.Success(stocks)
         }
     }

@@ -92,18 +92,24 @@ fun SignInScreen(
     signInViewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
-    SignIn(
-        uiState = signInViewModel.state,
-        onGoogleTokenReceived = signInViewModel::signIn,
-        onAlreadyLoggedIn = {}
-    )
+    val navController = State.NavController.current
+    if (signInViewModel.wasAlreadySignedIn && signInViewModel.state is SignInState.Loading) {
+        Loading()
+    } else if (signInViewModel.wasAlreadySignedIn && signInViewModel.state is SignInState.Success) {
+        if (signInViewModel.hasPadlockEnabled) navController.navigate(Screens.Unlock.route)
+        else navController.navigate(Screens.Overview.route)
+    } else {
+        SignIn(
+            uiState = signInViewModel.state,
+            onGoogleTokenReceived = signInViewModel::signIn,
+        )
+    }
 }
 
 @Composable
 fun SignIn(
     uiState: SignInState,
     onGoogleTokenReceived: (String) -> Unit,
-    onAlreadyLoggedIn: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current as Activity
@@ -114,17 +120,8 @@ fun SignIn(
 
     googleSignInClient = remember { createGoogleSignInClient(context) }
 
-    val lastSignInAccount = remember(key1 = isFirstRun) {
-        if (isFirstRun) GoogleSignIn.getLastSignedInAccount(context)
-        else null // Return null on subsequent calls
-    }
-    val isDoneProcessing = lastSignInAccount == null && !isFirstRun
-    isFirstRun = false
-
-    if (lastSignInAccount != null) {
-        // TODO: Get token, and set log in like that from local database
-        onAlreadyLoggedIn(lastSignInAccount.idToken!!)
-    }
+    val lastSignInAccount = remember { GoogleSignIn.getLastSignedInAccount(context) }
+    val isDoneProcessing = lastSignInAccount == null
 
     if (!isDoneProcessing || isLoading.value || uiState is SignInState.Loading) {
         Loading(
@@ -201,7 +198,6 @@ fun SignInWithPreview() {
         SignIn(
             uiState = SignInState.Waiting,
             onGoogleTokenReceived = {},
-            onAlreadyLoggedIn = {}
         )
     }
 }
@@ -213,7 +209,6 @@ fun SignInWithPreviewLoading() {
         SignIn(
             uiState = SignInState.Loading,
             onGoogleTokenReceived = {},
-            onAlreadyLoggedIn = {}
         )
     }
 }
@@ -225,7 +220,6 @@ fun SignInWithPreviewError() {
         SignIn(
             uiState = SignInState.Error("An unknown error occurred"),
             onGoogleTokenReceived = {},
-            onAlreadyLoggedIn = {}
         )
     }
 }

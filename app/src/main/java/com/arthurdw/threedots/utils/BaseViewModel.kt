@@ -8,7 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.arthurdw.threedots.ThreeDotsApplication
-import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.AppContainer
+import com.arthurdw.threedots.data.NetworkRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
@@ -46,8 +47,18 @@ abstract class BaseViewModel : ViewModel() {
             return viewModelFactory {
                 initializer {
                     val application = (this[APPLICATION_KEY] as ThreeDotsApplication)
-                    val repository = application.container.repository
-                    VM::class.java.getConstructor(Repository::class.java).newInstance(repository)
+                    val repository = application.container.networkRepository
+                    VM::class.java.getConstructor(NetworkRepository::class.java).newInstance(repository)
+                }
+            }
+        }
+
+        inline fun <reified VM : BaseViewModel> createFactoryContainer(): ViewModelProvider.Factory {
+            return viewModelFactory {
+                initializer {
+                    val application = (this[APPLICATION_KEY] as ThreeDotsApplication)
+                    val container = application.container
+                    VM::class.java.getConstructor(AppContainer::class.java).newInstance(container)
                 }
             }
         }

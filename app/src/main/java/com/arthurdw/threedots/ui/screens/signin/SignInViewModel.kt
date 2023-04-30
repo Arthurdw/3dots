@@ -1,9 +1,10 @@
 package com.arthurdw.threedots.ui.screens.signin
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.arthurdw.threedots.data.Repository
+import com.arthurdw.threedots.data.AppContainer
 import com.arthurdw.threedots.utils.BaseViewModel
 import com.arthurdw.threedots.utils.State
 
@@ -14,21 +15,58 @@ sealed interface SignInState {
     data class Error(val message: String) : SignInState
 }
 
-class SignInViewModel(private val repository: Repository) : BaseViewModel() {
-    var state: SignInState by mutableStateOf(SignInState.Waiting)
+class SignInViewModel(private val container: AppContainer) : BaseViewModel() {
+    var state: SignInState by mutableStateOf(SignInState.Loading)
         private set
+
+    var wasAlreadySignedIn: Boolean by mutableStateOf(true)
+        private set
+
+    var hasPadlockEnabled: Boolean by mutableStateOf(false)
+        private set
+
+    init {
+        tryLastSession()
+        checkPadlockEnabled()
+    }
+
+    private fun checkPadlockEnabled() {
+        wrapRepositoryAction({ Log.e("SignInViewModel", "Failed to check padlock: $it") }) {
+            hasPadlockEnabled = container.offlineRepository.getPadlockValue() != null
+        }
+    }
+
+    private suspend fun setLocalUser() {
+        State.LocalUser = container.networkRepository.getMe()
+        state = SignInState.Success
+    }
+
+    private fun tryLastSession() {
+        wrapRepositoryAction({ state = SignInState.Error(it) }) {
+            state = SignInState.Loading
+            container.offlineRepository.getSessionToken()?.let {
+                Log.d("SignInViewModel", "Found session token: $it")
+                State.LocalApiToken = it
+                wasAlreadySignedIn = true
+                setLocalUser()
+            } ?: run {
+                state = SignInState.Waiting
+                wasAlreadySignedIn = false
+            }
+        }
+    }
 
     fun signIn(token: String) {
         wrapRepositoryAction({ state = SignInState.Error(it) }) {
             state = SignInState.Loading
-            // TODO: Store data locally
-            State.LocalApiToken = repository.loginOrRegister(token)
-            State.LocalUser = repository.getMe()
-            state = SignInState.Success
+            State.LocalApiToken = container.networkRepository.loginOrRegister(token)
+            Log.d("SignInViewModel", "Token: ${State.LocalApiToken}")
+            container.offlineRepository.setSessionToken(State.LocalApiToken)
+            setLocalUser()
         }
     }
 
     companion object {
-        val Factory = createFactory<SignInViewModel>()
+        val Factory = createFactoryContainer<SignInViewModel>()
     }
 }
