@@ -23,6 +23,8 @@ import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Stock
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.data.objects.ShareUser
+import com.arthurdw.threedots.data.objects.User
 import com.arthurdw.threedots.data.objects.toBasicStocks
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.PreviewWrapper
@@ -35,6 +37,7 @@ import com.patrykandpatrick.vico.compose.chart.scroll.rememberChartScrollSpec
 import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import kotlinx.serialization.json.Json
 
 @Composable
 fun BalanceStatistic(title: String, value: Float, modifier: Modifier = Modifier) {
@@ -65,19 +68,14 @@ fun StocksSection(title: String, data: List<BasicStock>, modifier: Modifier = Mo
 }
 
 @Composable
-fun OverviewScreen(
-    userId: String? = null,
-    overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory),
+fun OverviewScreenContent(
+    user: User,
+    worthState: WorthState,
+    pickedStocksState: PickedStocksState,
+    followedStocksState: FollowedStocksState,
     modifier: Modifier = Modifier,
 ) {
-    // TODO: Check if QR code is valid (user with id exists)
-    // TODO: Get data from user with id
     val scrollState = rememberScrollState()
-    val user by remember { derivedStateOf { State.LocalUser } }
-
-    val worthState = overviewViewModel.worthState
-    val pickedStocksState = overviewViewModel.pickedStocksState
-    val followedStocksState = overviewViewModel.followedStocksState
 
     ThreeDotsLayout(user.username) {
         Column(
@@ -134,6 +132,45 @@ fun OverviewScreen(
                     )
             }
         }
+    }
+}
+
+@Composable
+fun OverviewScreenCurrentUser(
+    overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory),
+    modifier: Modifier = Modifier,
+) {
+    val user by remember { derivedStateOf { State.LocalUser } }
+
+    val worthState = overviewViewModel.worthState
+    val pickedStocksState = overviewViewModel.pickedStocksState
+    val followedStocksState = overviewViewModel.followedStocksState
+
+    OverviewScreenContent(
+        user = user,
+        worthState = worthState,
+        pickedStocksState = pickedStocksState,
+        followedStocksState = followedStocksState,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun OverviewScreen(
+    shareUserSerialized: String? = null,
+    modifier: Modifier = Modifier,
+) {
+    if (shareUserSerialized != null) {
+        val shareUser = Json.decodeFromString(ShareUser.serializer(), shareUserSerialized)
+        OverviewScreenContent(
+            user = shareUser.user,
+            worthState = WorthState.Success(shareUser.worth),
+            pickedStocksState = PickedStocksState.Success(shareUser.pickedStocks),
+            followedStocksState = FollowedStocksState.Success(shareUser.followedStocks),
+            modifier = modifier,
+        )
+    } else {
+        OverviewScreenCurrentUser()
     }
 }
 

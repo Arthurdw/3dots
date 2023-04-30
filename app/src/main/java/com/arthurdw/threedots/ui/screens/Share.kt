@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,11 +22,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.ThreeDotsLayout
+import com.arthurdw.threedots.components.Loading
+import com.arthurdw.threedots.data.objects.ShareUser
+import com.arthurdw.threedots.ui.screens.overview.FollowedStocksState
+import com.arthurdw.threedots.ui.screens.overview.OverviewViewModel
+import com.arthurdw.threedots.ui.screens.overview.PickedStocksState
+import com.arthurdw.threedots.ui.screens.overview.WorthState
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
+import kotlinx.serialization.json.Json
 
 private fun generateQRCode(content: String): ImageBitmap {
     val writer = QRCodeWriter()
@@ -60,22 +72,45 @@ fun QRCode(content: String) {
 
 
 @Composable
-fun ShareScreen() {
+fun ShareScreen(
+    modifier: Modifier = Modifier,
+    overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory)
+) {
+    val user by remember { derivedStateOf { State.LocalUser } }
+    val worthState = overviewViewModel.worthState
+    val pickedStocksState = overviewViewModel.pickedStocksState
+    val followedStocksState = overviewViewModel.followedStocksState
+
     ThreeDotsLayout("Share") {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // TODO: Get data dynamically
             Text(
-                text = "Arthurdw",
+                text = user.username,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Light,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
                 modifier = Modifier.padding(vertical = 16.dp),
             )
-            QRCode("6e8b6d3a-3b7d-11eb-adc1-0242ac120002")
+            when {
+                worthState is WorthState.Success
+                        && pickedStocksState is PickedStocksState.Success
+                        && followedStocksState is FollowedStocksState.Success -> {
+                    val shareUser = ShareUser(
+                        user = user,
+                        worth = worthState.value,
+                        pickedStocks = pickedStocksState.value,
+                        followedStocks = followedStocksState.value,
+                    )
+                    QRCode(Json.encodeToString(ShareUser.serializer(), shareUser))
+                }
+                worthState is WorthState.Error -> Text(worthState.message)
+                pickedStocksState is PickedStocksState.Error -> Text(pickedStocksState.message)
+                followedStocksState is FollowedStocksState.Error -> Text(followedStocksState.message)
+                else -> Loading()
+            }
         }
     }
 }
