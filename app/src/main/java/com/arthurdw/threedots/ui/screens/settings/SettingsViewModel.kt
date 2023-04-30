@@ -1,13 +1,13 @@
 package com.arthurdw.threedots.ui.screens.settings
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.arthurdw.threedots.data.AppContainer
 import com.arthurdw.threedots.utils.BaseViewModel
+import com.arthurdw.threedots.utils.State
 
 sealed interface SettingsState {
     object Idle : SettingsState
@@ -40,6 +40,30 @@ class SettingsViewModel(private val container: AppContainer) : BaseViewModel() {
             val padlockValue = container.offlineRepository.getPadlockValue()
             hasPadlockEnabled = !padlockValue.isNullOrEmpty()
             state = SettingsState.Idle
+        }
+    }
+
+    fun changeUsername(context: Context, username: String) {
+        wrapRepositoryAction({ Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }) {
+            if (username.isEmpty()) {
+                Toast.makeText(context, "Username can not be empty!", Toast.LENGTH_LONG).show()
+            } else if (username.length > 20) {
+                Toast.makeText(
+                    context,
+                    "Username can not be longer than 20 characters!",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else if (username.length < 3) {
+                Toast.makeText(
+                    context,
+                    "Username can not be shorter than 3 characters!",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                state = SettingsState.Loading
+                State.LocalUser = container.networkRepository.changeUsername(username)
+                state = SettingsState.Idle
+            }
         }
     }
 

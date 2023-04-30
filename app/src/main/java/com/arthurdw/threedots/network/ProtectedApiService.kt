@@ -2,6 +2,7 @@ package com.arthurdw.threedots.network
 
 import com.arthurdw.threedots.data.DefaultAppContainer.Companion.PREFIX
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.data.objects.ChangeUsername
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.data.objects.SearchStock
@@ -9,6 +10,7 @@ import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.data.objects.StockStatus
 import com.arthurdw.threedots.data.objects.StockWorth
 import com.arthurdw.threedots.data.objects.User
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -19,6 +21,8 @@ import retrofit2.http.Query
 interface ProtectedApiService {
     @GET("$PREFIX/users/me")
     suspend fun getMe(): User
+    @PUT("$PREFIX/users/me")
+    suspend fun changeUsername(@Body data: ChangeUsername): User
     @GET("$PREFIX/news")
     suspend fun getNews(): List<NewsItem>
     @GET("$PREFIX/users/me/worth")

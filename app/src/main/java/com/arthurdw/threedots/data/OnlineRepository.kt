@@ -1,6 +1,7 @@
 package com.arthurdw.threedots.data
 
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.data.objects.ChangeUsername
 import com.arthurdw.threedots.data.objects.LoginData
 import com.arthurdw.threedots.data.objects.NewsItem
 import com.arthurdw.threedots.data.objects.PickedStock
@@ -15,6 +16,7 @@ import com.arthurdw.threedots.network.PublicApiService
 interface NetworkRepository {
     suspend fun loginOrRegister(token: String): String
     suspend fun getMe(): User
+    suspend fun changeUsername(username: String): User
     suspend fun getNews(): List<NewsItem>
     suspend fun getWorth(): List<Float>
     suspend fun getStocks(): List<PickedStock>
@@ -39,6 +41,8 @@ class OnlineRepository(
     }
 
     override suspend fun getMe(): User = protectedApiService.getMe()
+    override suspend fun changeUsername(username: String): User =
+        protectedApiService.changeUsername(ChangeUsername(username))
     override suspend fun getNews(): List<NewsItem> = protectedApiService.getNews()
     override suspend fun getWorth(): List<Float> = protectedApiService.getWorth()
     override suspend fun getStocks(): List<PickedStock> = protectedApiService.getStocks()

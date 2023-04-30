@@ -137,7 +137,7 @@ fun SettingsScreen(
                     ) {
                         SettingsText("Change username:", Modifier.padding(bottom = 8.dp))
                         ManagedInputField(
-                            onComplete = { /* TODO */ },
+                            onComplete = { settingsViewModel.changeUsername(context, it) },
                             value = State.LocalUser.username,
                             modifier = Modifier.fillMaxWidth(0.9f),
                         )
