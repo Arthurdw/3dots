@@ -1,5 +1,6 @@
 package com.arthurdw.threedots.ui.screens.overview
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -162,6 +163,7 @@ fun OverviewScreen(
     shareUserSerialized: String? = null,
     modifier: Modifier = Modifier,
 ) {
+    Log.d("3dots", "OverviewScreen")
     if (shareUserSerialized != null) {
         val shareUser = Json.decodeFromString(ShareUser.serializer(), shareUserSerialized)
         OverviewScreenContent(

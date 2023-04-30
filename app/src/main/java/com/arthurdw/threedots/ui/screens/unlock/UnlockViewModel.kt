@@ -3,6 +3,7 @@ package com.arthurdw.threedots.ui.screens.unlock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.arthurdw.threedots.data.AppContainer
 import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.utils.BaseViewModel
 
@@ -13,16 +14,32 @@ sealed interface UnlockState {
     data class Error(val message: String) : UnlockState
 }
 
-class UnlockViewModel(private val networkRepository: NetworkRepository) : BaseViewModel() {
+class UnlockViewModel(private val container: AppContainer) : BaseViewModel() {
     var state: UnlockState by mutableStateOf(UnlockState.Idle)
         private set
 
-    fun unlock(code: String): Boolean {
-        // TODO: Check if the code is correct
-        return true
+    var token: String by mutableStateOf("")
+        private set
+
+    fun unlock(code: String) {
+        wrapRepositoryAction({ state = UnlockState.Error(it) }) {
+            state = UnlockState.Loading
+            val padlock = container.offlineRepository.getPadlockValue()
+            if (padlock == null) {
+                state = UnlockState.Success
+                return@wrapRepositoryAction
+            }
+            // TODO: Hash code
+            if (padlock != code) {
+                state = UnlockState.Error("Wrong code")
+                return@wrapRepositoryAction
+            }
+            token = code
+            state = UnlockState.Success
+        }
     }
 
     companion object {
-        val Factory = createFactory<UnlockViewModel>()
+        val Factory = createFactoryContainer<UnlockViewModel>()
     }
 }

@@ -16,12 +16,12 @@ import com.arthurdw.threedots.ui.screens.PickScreen
 import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen
-import com.arthurdw.threedots.ui.screens.stocks.StocksScreen
-import com.arthurdw.threedots.ui.screens.unlock.UnlockScreen
 import com.arthurdw.threedots.ui.screens.details.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.news.NewsScreen
 import com.arthurdw.threedots.ui.screens.overview.OverviewScreen
 import com.arthurdw.threedots.ui.screens.signin.SignInScreen
+import com.arthurdw.threedots.ui.screens.stocks.StocksScreen
+import com.arthurdw.threedots.ui.screens.unlock.UnlockScreen
 import com.arthurdw.threedots.utils.State
 
 enum class Screens(val route: String) {
@@ -57,11 +57,7 @@ fun ThreeDotsApp(modifier: Modifier = Modifier) {
         ) {
             NavHost(navController, startDestination = Screens.SignInWith.route) {
                 composable(Screens.SignInWith.route) { SignInScreen() }
-                composable(Screens.Unlock.route) {
-                    UnlockScreen(text = "Welcome back, Arthur!", onSuccess = {
-                        navController.navigate(Screens.Overview.route)
-                    })
-                }
+                composable(Screens.Unlock.route) { UnlockScreen(text = "Welcome back, ${State.LocalUser.username}!") }
                 composable(Screens.Overview.route) { OverviewScreen(null) }
                 composable(
                     Screens.Overview.route + "/{id}",

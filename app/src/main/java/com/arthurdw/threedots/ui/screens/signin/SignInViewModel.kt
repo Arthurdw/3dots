@@ -32,7 +32,8 @@ class SignInViewModel(private val container: AppContainer) : BaseViewModel() {
 
     private fun checkPadlockEnabled() {
         wrapRepositoryAction({ Log.e("SignInViewModel", "Failed to check padlock: $it") }) {
-            hasPadlockEnabled = container.offlineRepository.getPadlockValue() != null
+            val padlock = container.offlineRepository.getPadlockValue()
+            hasPadlockEnabled = !padlock.isNullOrEmpty()
         }
     }
 

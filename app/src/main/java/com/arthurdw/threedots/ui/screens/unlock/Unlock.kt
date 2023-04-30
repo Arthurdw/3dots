@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.components.Loading
+import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.State
 
@@ -114,8 +115,8 @@ fun Unlock(
 
     if (insertedState.size == 5) {
         val joined = insertedState.joinToString("")
-        onUnlock(joined)
         insertedState.clear()
+        onUnlock(joined)
     }
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -145,7 +146,7 @@ fun Unlock(
             }
 
             Column(
-                modifier = Modifier.padding(top = 100.dp, bottom = 50.dp),
+                modifier = Modifier.padding(top = 70.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 UnlockDots(insertedState.size)
@@ -167,22 +168,29 @@ fun UnlockScreen(
     modifier: Modifier = Modifier,
     text: String? = null,
     unlockViewModel: UnlockViewModel = viewModel(factory = UnlockViewModel.Factory),
-    onSuccess: () -> Unit = {},
+    disableCheck: Boolean = false,
+    onSuccess: (String) -> Unit = {},
 ) {
+    val navController = State.NavController.current
+    fun unlock(code: String) {
+        if (!disableCheck) unlockViewModel.unlock(code)
+        else onSuccess(code)
+    }
     when (val state = unlockViewModel.state) {
         is UnlockState.Loading -> Loading()
         is UnlockState.Error -> {
             Unlock(
                 text = state.message,
-                onUnlock = { unlockViewModel.unlock(it) },
+                onUnlock = { unlock(it) },
                 modifier = modifier,
             )
         }
-        is UnlockState.Success -> onSuccess()
+
+        is UnlockState.Success -> navController.navigate(Screens.Overview.route)
         is UnlockState.Idle -> {
             Unlock(
                 text = text,
-                onUnlock = { unlockViewModel.unlock(it) },
+                onUnlock = { unlock(it) },
                 modifier = modifier,
             )
         }
