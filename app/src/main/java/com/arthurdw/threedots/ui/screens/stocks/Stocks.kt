@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -93,6 +94,8 @@ fun StocksScreen(
 ) {
     val scrollState = rememberScrollState()
     val state = stocksViewModel.state
+    var query by remember { mutableStateOf("") }
+
 
     ThreeDotsLayout("Stocks") {
         Column(
@@ -102,13 +105,28 @@ fun StocksScreen(
                 .padding(top = 12.dp)
         ) {
             SearchBar(
-                onSearch = { stocksViewModel.searchStocks(it) },
-                onClear = { stocksViewModel.searchStocks("") }
+                onSearch = {
+                    stocksViewModel.searchStocks(it)
+                    query = it
+                },
+                onClear = {
+                    stocksViewModel.searchStocks("")
+                    query = ""
+                }
             )
             Spacer(modifier = Modifier.height(24.dp))
             when (state) {
                 is StocksState.Loading -> Loading()
-                is StocksState.Error -> Text(text = state.message)
+                is StocksState.Error -> {
+                    Text(
+                        "Failed to load stocks...",
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    TextButton(onClick = { stocksViewModel.searchStocks(query) }) {
+                        Text(text = "Retry")
+                    }
+                }
+
                 is StocksState.Success -> {
                     Column(
                         modifier = Modifier

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -109,8 +110,7 @@ fun StockDetailsContent(
             Chart(
                 chart = lineChart(
                     axisValuesOverrider = AxisValuesOverrider.fixed(
-                        minY = minimumValue,
-                        maxY = maximumValue
+                        minY = minimumValue, maxY = maximumValue
                     ),
                 ),
                 model = stock.entryModel,
@@ -121,39 +121,40 @@ fun StockDetailsContent(
         }
         Spacer(modifier = Modifier.height(16.dp))
         when (stockStatus) {
-            is StockStatusState.Error -> Text(stockStatus.message)
-            is StockStatusState.Loading -> {}
+            is StockStatusState.Error -> {
+                Text(
+                    "Failed to your personal data...", modifier = Modifier.padding(bottom = 12.dp)
+                )
+                TextButton(onClick = { navController.popBackStack() }) {
+                    Text(text = "Retry")
+                }
+            }
+
             is StockStatusState.Success -> {
                 val picked = stockStatus.status.picked
                 val followed = stockStatus.status.followed
 
                 if (picked != null) {
                     DataSection(
-                        title = "Your stock",
-                        data = mapOf(
+                        title = "Your stock", data = mapOf(
                             "Amount" to picked.amount.toString(),
                             "Buy price" to picked.spent.toCurrencyString(),
                             "Profit" to ((stock.price * picked.amount) - picked.spent).toCurrencyString()
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    StockButton(
-                        text = "PICK",
+                    StockButton(text = "PICK",
                         onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
                     Spacer(modifier = Modifier.height(8.dp))
-                    StockButton(
-                        text = "SELL",
-                        onClick = {
-                            navController.navigate(
-                                Screens.Pick.withArgs(
-                                    stock.symbol,
-                                    true
-                                )
+                    StockButton(text = "SELL", onClick = {
+                        navController.navigate(
+                            Screens.Pick.withArgs(
+                                stock.symbol, true
                             )
-                        })
+                        )
+                    })
                 } else {
-                    StockButton(
-                        text = "PICK",
+                    StockButton(text = "PICK",
                         onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
                 }
 
@@ -164,11 +165,12 @@ fun StockDetailsContent(
                     StockButton(text = "Add to watchlist", onClick = onStockFollow)
                 }
             }
+
+            else -> {}
         }
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "General",
-            data = mapOf(
+            title = "General", data = mapOf(
                 "Bid" to stock.bid.toCurrencyString(),
                 "Ask" to stock.ask.toCurrencyString(),
                 "Open" to (stock.open?.toCurrencyString() ?: "N/A"),
@@ -187,8 +189,7 @@ fun StockDetailsContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "Dividend",
-            data = mapOf(
+            title = "Dividend", data = mapOf(
                 "Dividend yield" to (stock.dividendYield * 100).toPercentageString(),
                 "Dividend P/S" to stock.dividendPerShare.toCurrencyString(),
                 "Ex-dividend date" to stock.exDividendDate.toDateString(),
@@ -197,8 +198,7 @@ fun StockDetailsContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "About",
-            data = mapOf(
+            title = "About", data = mapOf(
                 "Symbol" to stock.symbol,
                 "Asset Type" to stock.assetType,
                 "Name" to stock.name,
@@ -221,8 +221,7 @@ fun StockDetailsContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "Other details",
-            data = mapOf(
+            title = "Other details", data = mapOf(
                 "Fifty day moving average" to stock.fiftyDayMovingAverage.toCurrencyString(),
                 "Two hundred day moving average" to stock.twoHundredDayMovingAverage.toCurrencyString(),
                 "Shares outstanding" to stock.sharesOutstanding.toCurrencyString(),
@@ -267,7 +266,21 @@ fun StockDetailsScreen(
     ThreeDotsLayout(stockSymbol) {
         when (stockDetailsState) {
             is StockDetailsState.Loading -> Loading()
-            is StockDetailsState.Error -> Text(text = stockDetailsState.message)
+            is StockDetailsState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "Failed to fetch stock details", modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    TextButton(onClick = { stockDetailsViewModel.fetch(stockSymbol) }) {
+                        Text(text = "Retry")
+                    }
+                }
+            }
+
             is StockDetailsState.Success -> {
                 StockDetailsContent(
                     stock = stockDetailsState.stock,

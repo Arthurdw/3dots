@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.settings
 
 import android.os.Build
 import android.util.Log
@@ -31,8 +31,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.ManagedInputField
-import com.arthurdw.threedots.ui.screens.settings.SettingsState
-import com.arthurdw.threedots.ui.screens.settings.SettingsViewModel
 import com.arthurdw.threedots.ui.screens.unlock.UnlockScreen
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
