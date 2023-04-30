@@ -12,16 +12,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.arthurdw.threedots.ui.screens.news.NewsScreen
-import com.arthurdw.threedots.ui.screens.overview.OverviewScreen
 import com.arthurdw.threedots.ui.screens.PickScreen
 import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen
-import com.arthurdw.threedots.ui.screens.signin.SignInScreen
-import com.arthurdw.threedots.ui.screens.details.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.StocksScreen
-import com.arthurdw.threedots.ui.screens.Unlock
+import com.arthurdw.threedots.ui.screens.UnlockScreen
+import com.arthurdw.threedots.ui.screens.details.StockDetailsScreen
+import com.arthurdw.threedots.ui.screens.news.NewsScreen
+import com.arthurdw.threedots.ui.screens.overview.OverviewScreen
+import com.arthurdw.threedots.ui.screens.signin.SignInScreen
 import com.arthurdw.threedots.utils.State
 
 enum class Screens(val route: String) {
@@ -58,7 +58,7 @@ fun ThreeDotsApp(modifier: Modifier = Modifier) {
             NavHost(navController, startDestination = Screens.SignInWith.route) {
                 composable(Screens.SignInWith.route) { SignInScreen() }
                 composable(Screens.Unlock.route) {
-                    Unlock(text = "Welcome back, Arthur!", onSuccess = {
+                    UnlockScreen(text = "Welcome back, Arthur!", onSuccess = {
                         navController.navigate(Screens.Overview.route)
                     })
                 }

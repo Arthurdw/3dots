@@ -25,8 +25,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.R
+import com.arthurdw.threedots.components.Loading
+import com.arthurdw.threedots.ui.screens.unlock.UnlockState
+import com.arthurdw.threedots.ui.screens.unlock.UnlockViewModel
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
+import com.arthurdw.threedots.utils.State
 
 val insertedState by lazy { mutableStateListOf<String>() }
 
@@ -102,19 +107,17 @@ fun UnlockDots(amount: Int, modifier: Modifier = Modifier) {
 
 
 @Composable
-fun Unlock(text: String?, onSuccess: () -> Unit = {}) {
+fun Unlock(
+    text: String?,
+    onUnlock: (code: String) -> Unit = { },
+    modifier: Modifier = Modifier
+) {
     val icon = painterResource(id = R.drawable.ic_dots)
 
     if (insertedState.size == 5) {
         val joined = insertedState.joinToString("")
-
-        // TODO: Check for hash
-        if (joined == "11111") {
-            onSuccess()
-            insertedState.clear()
-        } else {
-            insertedState.clear()
-        }
+        onUnlock(joined)
+        insertedState.clear()
     }
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -161,10 +164,37 @@ fun Unlock(text: String?, onSuccess: () -> Unit = {}) {
     }
 }
 
+@Composable
+fun UnlockScreen(
+    modifier: Modifier = Modifier,
+    text: String? = null,
+    unlockViewModel: UnlockViewModel = viewModel(factory = UnlockViewModel.Factory),
+    onSuccess: () -> Unit = {},
+) {
+    when (val state = unlockViewModel.state) {
+        is UnlockState.Loading -> Loading()
+        is UnlockState.Error -> {
+            Unlock(
+                text = state.message,
+                onUnlock = { unlockViewModel.unlock(it) },
+                modifier = modifier,
+            )
+        }
+        is UnlockState.Success -> onSuccess()
+        is UnlockState.Idle -> {
+            Unlock(
+                text = text,
+                onUnlock = { unlockViewModel.unlock(it) },
+                modifier = modifier,
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun UnlockPreview() {
     ThreeDotsTheme {
-        Unlock(text = "Welcome back Arthur!")
+        Unlock(text = "Welcome back ${State.LocalUser.username}!")
     }
 }
