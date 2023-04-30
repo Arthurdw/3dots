@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.User
 
 object State {

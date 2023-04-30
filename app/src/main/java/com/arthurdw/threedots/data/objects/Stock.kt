@@ -23,8 +23,7 @@ abstract class Roi {
         get() = ((roi * 100).roundToInt().toFloat() / 100).toPercentageString()
 }
 
-@Serializable
-data class BasicStock(
+@Serializable data class BasicStock(
     @SerialName("stockName")
     val name: String,
     @SerialName("stock")

@@ -1,6 +1,5 @@
 import { Context } from "hono";
-import { cachedFetch } from "../utils/cache";
-import { StockEndpoints, StockEndpointType } from "../utils/stock-endpoints";
+import { fetchOverview, fetchQuote } from "../utils/cache";
 import { db } from "../utils/db";
 import { getAuthUser } from "../utils/jwt";
 
@@ -10,64 +9,64 @@ export default async (c: Context) => {
   const symbol = c.req.param("id");
   let amount = parseFloat(c.req.query("amount")) || 1;
 
-  const stockFetch = (endpoint: StockEndpointType) =>
-    cachedFetch(endpoint(symbol, c.env.STOCKS_API_TOKEN), CACHE_TTL);
+  try {
+    const [quote, overview] = await Promise.all([
+      fetchQuote(c, symbol, CACHE_TTL),
+      fetchOverview(c, symbol, CACHE_TTL),
+    ]);
 
-  const [quote, overview] = await Promise.all([
-    stockFetch(StockEndpoints.QUOTE),
-    stockFetch(StockEndpoints.OVERVIEW),
-  ]);
+    const prisma = db(c);
+    const user = getAuthUser(c);
 
-  const quoteData: QuoteData = await quote.json();
-  const overviewData: OverviewData = await overview.json();
-  const sellPrice = parseFloat(quoteData["Global Quote"]["05. price"]);
-
-  const prisma = db(c);
-  const user = getAuthUser(c);
-
-  const stock = await prisma.picks.findUnique({
-    where: {
-      userId_stock: {
-        stock: symbol,
-        userId: user.id,
-      },
-    },
-  });
-
-  let spent = sellPrice * amount;
-
-  if (!stock) {
-    await prisma.picks.create({
-      data: {
-        stock: symbol,
-        userId: user.id,
-        amount,
-        spent,
-        stockName: overviewData.Name,
-      },
-    });
-  } else {
-    amount = stock.amount + amount;
-    spent = stock.spent + spent;
-    await prisma.picks.update({
+    const stock = await prisma.picks.findUnique({
       where: {
         userId_stock: {
           stock: symbol,
           userId: user.id,
         },
       },
-      data: { amount, spent },
     });
+
+    let spent = quote.price * amount;
+
+    if (!stock) {
+      await prisma.picks.create({
+        data: {
+          stock: symbol,
+          userId: user.id,
+          amount,
+          spent,
+          stockName: overview.Name,
+        },
+      });
+    } else {
+      amount = stock.amount + amount;
+      spent = stock.spent + spent;
+      await prisma.picks.update({
+        where: {
+          userId_stock: {
+            stock: symbol,
+            userId: user.id,
+          },
+        },
+        data: { amount, spent },
+      });
+    }
+
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        spent: user.spent + spent,
+      },
+    });
+
+    return c.json({ symbol, amount, spent });
+  } catch (err) {
+    return c.json(
+      { message: "Could not get stock details, please try again." },
+      { status: 500 }
+    );
   }
-
-  await prisma.user.update({
-    where: {
-      id: user.id,
-    },
-    data: {
-      spent: user.spent + spent,
-    },
-  });
-
-  return c.json({ symbol, amount, spent });
 };

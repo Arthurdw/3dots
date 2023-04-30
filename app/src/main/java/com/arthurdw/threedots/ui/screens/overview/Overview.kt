@@ -90,19 +90,21 @@ fun OverviewScreenContent(
                 is WorthState.Error -> Text(text = "Error")
                 is WorthState.Success -> {
                     val worth = worthState.value
-                    ProvideChartStyle(rememberChartStyle()) {
-                        Chart(
-                            chart = lineChart(
-                                axisValuesOverrider = AxisValuesOverrider.fixed(
-                                    minY = worth.min(),
-                                    maxY = worth.max()
-                                )
-                            ),
-                            model = entryModelOf(*worth.toTypedArray()),
-                            endAxis = endAxis(),
-                            modifier = Modifier.fillMaxWidth(0.9f),
-                            chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
-                        )
+                    if (worth.isNotEmpty()) {
+                        ProvideChartStyle(rememberChartStyle()) {
+                            Chart(
+                                chart = lineChart(
+                                    axisValuesOverrider = AxisValuesOverrider.fixed(
+                                        minY = worth.min(),
+                                        maxY = worth.max()
+                                    )
+                                ),
+                                model = entryModelOf(*worth.toTypedArray()),
+                                endAxis = endAxis(),
+                                modifier = Modifier.fillMaxWidth(0.9f),
+                                chartScrollSpec = rememberChartScrollSpec(isScrollEnabled = false)
+                            )
+                        }
                     }
                 }
             }

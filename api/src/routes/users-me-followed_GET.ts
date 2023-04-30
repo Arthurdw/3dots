@@ -1,6 +1,7 @@
 import { Context } from "hono";
 import { db } from "../utils/db";
 import { getAuthUser } from "../utils/jwt";
+import { fetchQuote } from "../utils/cache";
 
 const CACHE_TTL = 60 * 30; // 30 minutes
 
@@ -18,15 +19,16 @@ export default async (c: Context) => {
     },
   });
 
-  const withFinancials = await Promise.all(
-    data.map(async (stock) => {
+  const withFinancials = await Promise.all([
+    ...data.map(async (stock) => {
+      const quote = await fetchQuote(c, stock.stock, CACHE_TTL);
       return {
         ...stock,
-        price: 0,
-        lastPrice: 0,
+        price: quote.price,
+        lastPrice: quote.open,
       };
-    })
-  );
+    }),
+  ]);
 
   return c.json(withFinancials);
 };

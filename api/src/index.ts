@@ -8,7 +8,7 @@ import { UserLogin } from "./schema/user-login";
 import { requiresAuth } from "./middleware/requires-auth";
 import userLoginOrRegister from "./routes/users_POST";
 import userGetMe from "./routes/users-me_GET";
-import userStocks from "./routes/stocks-picked_GET";
+import userStocks from "./routes/users-me-picked_GET";
 import usersMeWorth from "./routes/users-me-worth";
 import userGetFollowedStocks from "./routes/users-me-followed_GET";
 import newsGet from "./routes/news_GET";

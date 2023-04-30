@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.arthurdw.threedots.data.Repository
 import com.arthurdw.threedots.data.objects.StockWorth
 import com.arthurdw.threedots.utils.BaseViewModel
+import com.arthurdw.threedots.utils.State
 
 sealed interface PickState {
     object Loading : PickState
@@ -27,10 +28,16 @@ class PickViewModel(private val repository: Repository) : BaseViewModel() {
     }
 
     fun buyStock(symbol: String, amount: Float) =
-        performAction { repository.buyStock(symbol, amount) }
+        performAction {
+            repository.buyStock(symbol, amount)
+            State.LocalUser = repository.getMe()
+        }
 
     fun sellStock(symbol: String, amount: Float) =
-        performAction { repository.sellStock(symbol, amount) }
+        performAction {
+            repository.sellStock(symbol, amount)
+            State.LocalUser = repository.getMe()
+        }
 
     fun initStock(symbol: String) {
         wrapRepositoryAction({ state = PickState.Error(it) }) {

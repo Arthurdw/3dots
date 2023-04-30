@@ -38,8 +38,81 @@ model FollowedStocks {
 
 model PortfolioWorthHistory {
   userId    String
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
   worth     Float
 
   @@id([userId, createdAt])
+}
+
+model NewsCache {
+  url         String @id
+  title       String
+  snippet     String
+  imageUrl    String
+  source      String
+  publishedAt String
+}
+
+model StockDetailsCache {
+  Symbol                     String @id
+  AssetType                  String
+  Name                       String
+  Description                String @db.Text
+  CIK                        String
+  Exchange                   String
+  Currency                   String
+  Country                    String
+  Sector                     String
+  Industry                   String
+  Address                    String
+  FiscalYearEnd              String
+  LatestQuarter              String
+  MarketCapitalization       String
+  EBITDA                     String
+  PERatio                    String
+  PEGRatio                   String
+  DividendPerShare           String
+  DividendYield              String
+  EPS                        String
+  RevenueTTM                 String
+  GrossProfitTTM             String
+  AnalystTargetPrice         String
+  FiftyTwoWeekHigh           String
+  FiftyTwoWeekLow            String
+  DividendDate               String
+  ExDividendDate             String
+  FiftyDayMovingAverage      String
+  TwoHundredDayMovingAverage String
+  SharesOutstanding          String
+  BookValue                  String
+  RevenuePerShareTTM         String
+  ProfitMargin               String
+  OperatingMarginTTM         String
+  ReturnOnAssetsTTM          String
+  ReturnOnEquityTTM          String
+  DilutedEPSTTM              String
+  QuarterlyEarningsGrowthYOY String
+  QuarterlyRevenueGrowthYOY  String
+  TrailingPE                 String
+  ForwardPE                  String
+  PriceToSalesRatioTTM       String
+  PriceToBookRatio           String
+  EVToRevenue                String
+  EVToEBITDA                 String
+  Beta                       String
+}
+
+model StockIntradayCache {
+  Symbol String @id
+  data   String @db.Text
+  open   Float
+  bid    Float
+  ask    Float
+  close  Float
+}
+
+model StockQuoteCache {
+  symbol String @id
+  open   Float
+  price  Float
 }

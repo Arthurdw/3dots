@@ -32,7 +32,5 @@ export default async (c: Context) => {
     }),
   ]);
 
-  console.log(JSON.stringify({ picked, followed }))
-
   return c.json({ picked, followed });
 };
