@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,10 +24,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.ThreeDotsLayout
+import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.ManagedInputField
 import com.arthurdw.threedots.data.objects.BasicStock
+import com.arthurdw.threedots.data.objects.StockWorth
+import com.arthurdw.threedots.ui.Screens
+import com.arthurdw.threedots.ui.screens.pick.PickState
+import com.arthurdw.threedots.ui.screens.pick.PickViewModel
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.State
 import com.arthurdw.threedots.utils.toCurrencyString
 
 @Composable
@@ -38,15 +46,13 @@ fun LabeledText(label: String, text: String) {
 }
 
 @Composable
-fun PickScreen(stockId: String, sell: Boolean = false) {
+fun PickScreen(
+    stockId: String,
+    stock: StockWorth,
+    sell: Boolean = false,
+    onAction: (String, Float) -> Unit
+) {
     val title = if (sell) "Sell" else "Buy"
-
-    val stock = BasicStock(
-        symbol = "APL",
-        name = "Apple",
-        price = 156.0f,
-        lastPrice = 156.0f,
-    )
 
     var price by remember { mutableStateOf(stock.price) }
     var amount by remember { mutableStateOf(1f) }
@@ -68,9 +74,8 @@ fun PickScreen(stockId: String, sell: Boolean = false) {
                 fontWeight = FontWeight.Bold,
             )
             LabeledText(
-                stock.symbol, stock.name
+                stock.symbol, stock.stockName
             )
-//            }
             Text("Price", fontWeight = FontWeight.Bold)
             if (editingPrice) {
                 editingAmount = false
@@ -131,7 +136,7 @@ fun PickScreen(stockId: String, sell: Boolean = false) {
             }
 
             TextButton(
-                onClick = { /*TODO*/ },
+                onClick = { onAction(stockId, amount) },
                 colors = ButtonDefaults.textButtonColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
@@ -147,6 +152,35 @@ fun PickScreen(stockId: String, sell: Boolean = false) {
     }
 }
 
+@Composable
+fun PickScreen(
+    stockId: String,
+    sell: Boolean = false,
+    pickViewModel: PickViewModel = viewModel(factory = PickViewModel.Factory),
+) {
+    val uiState = pickViewModel.state
+    val navController = State.NavController.current
+    var requestedStockWorth by remember { mutableStateOf(false) }
+
+    if (!requestedStockWorth) {
+        pickViewModel.initStock(stockId)
+        requestedStockWorth = true
+    }
+
+    when (uiState) {
+        is PickState.Idle -> {
+            PickScreen(
+                stockId = stockId,
+                sell = sell,
+                stock = uiState.stock,
+                onAction = if (sell) pickViewModel::sellStock else pickViewModel::buyStock
+            )
+        }
+        is PickState.Loading -> Loading()
+        is PickState.Error -> Text(uiState.message)
+        is PickState.Success -> navController.navigate(Screens.Overview.route)
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

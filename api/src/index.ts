@@ -16,6 +16,7 @@ import stockGet from "./routes/stock-[id]_GET"
 import stockBuy from "./routes/stock-[id]_POST"
 import stockSell from "./routes/stock-[id]_DELETE"
 import stockStatus from "./routes/stock-[id]-status_GET"
+import stockWorth from "./routes/stock-[id]-worth_GET"
 import searchStocks from "./routes/stocks_GET"
 import followStock from "./routes/stock-[id]-follow_PUT"
 import unfollowStock from "./routes/stock-[id]-follow_DELETE"
@@ -42,6 +43,7 @@ app.get("/stock/:id", requiresAuth, stockGet)
 app.post("/stock/:id", requiresAuth, stockBuy)
 app.delete("/stock/:id", requiresAuth, stockSell)
 app.get("/stock/:id/status", requiresAuth, stockStatus)
+app.get("/stock/:id/worth", requiresAuth, stockWorth)
 app.put("/stock/:id/follow", requiresAuth, followStock)
 app.delete("/stock/:id/follow", requiresAuth, unfollowStock)
 

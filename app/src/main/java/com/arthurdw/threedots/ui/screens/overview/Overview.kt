@@ -72,17 +72,6 @@ fun OverviewScreen(
 ) {
     // TODO: Check if QR code is valid (user with id exists)
     // TODO: Get data from user with id
-
-    val followedStocks = listOf(
-        BasicStock("Alphabet", "GOOGL", 93.65f, 101.7f),
-        BasicStock("Amazon", "AMZN", 331.48f, 309.04f),
-        BasicStock("Apple", "AAPL", 168.56f, 161.4f),
-        BasicStock("Facebook", "FB", 311.54f, 304.67f),
-        BasicStock("Johnson & Johnson", "JNJ", 165.55f, 165.22f),
-        BasicStock("Microsoft", "MSFT", 264.11f, 266.71f),
-        BasicStock("Tesla", "TSLA", 710.44f, 699.68f)
-    )
-
     val scrollState = rememberScrollState()
     val user by remember { derivedStateOf { State.LocalUser } }
 
@@ -139,7 +128,7 @@ fun OverviewScreen(
                 is FollowedStocksState.Error -> Text(text = "Error")
                 is FollowedStocksState.Success ->
                     StocksSection(
-                        "Followed stocks",
+                        "Watchlist",
                         followedStocksState.value,
                         modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
                     )

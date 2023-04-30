@@ -33,7 +33,9 @@ fun Stock(stock: BasicStock, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-            .clickable { navController.navigate(Screens.StockDetails.withArgs(stock.symbol)) }
+            .clickable {
+                navController.navigate(Screens.StockDetails.withArgs(stock.symbol))
+            }
     ) {
         Row(
             modifier = Modifier

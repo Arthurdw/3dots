@@ -6,12 +6,12 @@ const CACHE_TTL = 60; // One minute
 
 export default async (c: Context) => {
   const symbol = c.req.param("id");
-  const fetch = (endpoint: StockEndpointType) =>
+  const stockFetch = (endpoint: StockEndpointType) =>
     cachedFetch(endpoint(symbol, c.env.STOCKS_API_TOKEN), CACHE_TTL);
 
   const responses = await Promise.all([
-    fetch(StockEndpoints.OVERVIEW),
-    fetch(StockEndpoints.INTRADAY),
+    stockFetch(StockEndpoints.OVERVIEW),
+    stockFetch(StockEndpoints.INTRADAY),
   ]);
 
   const [overviewData, intradayData] = <[Object, IntradayData]>(

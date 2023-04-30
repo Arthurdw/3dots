@@ -10,12 +10,12 @@ export default async (c: Context) => {
   const symbol = c.req.param("id");
   let amount = parseFloat(c.req.query("amount")) || 1;
 
-  const fetch = (endpoint: StockEndpointType) =>
+  const stockFetch = (endpoint: StockEndpointType) =>
     cachedFetch(endpoint(symbol, c.env.STOCKS_API_TOKEN), CACHE_TTL);
 
   const [quote, overview] = await Promise.all([
-    fetch(StockEndpoints.QUOTE),
-    fetch(StockEndpoints.OVERVIEW),
+    stockFetch(StockEndpoints.QUOTE),
+    stockFetch(StockEndpoints.OVERVIEW),
   ]);
 
   const quoteData: QuoteData = await quote.json();
