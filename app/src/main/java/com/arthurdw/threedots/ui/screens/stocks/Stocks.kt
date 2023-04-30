@@ -1,6 +1,5 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.stocks
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,11 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.InputField
+import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Stock
-import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.utils.PreviewWrapper
 
 
@@ -86,23 +87,12 @@ fun SearchBar(
 
 
 @Composable
-fun StocksScreen() {
+fun StocksScreen(
+    modifier: Modifier = Modifier,
+    stocksViewModel: StocksViewModel = viewModel(factory = StocksViewModel.Factory)
+) {
     val scrollState = rememberScrollState()
-
-    val stocks = listOf(
-        BasicStock("Alibaba", "BABA", 219.68f, 214.26f),
-        BasicStock("Alphabet", "GOOGL", 93.65f, 101.7f),
-        BasicStock("Amazon", "AMZN", 331.48f, 309.04f),
-        BasicStock("Apple", "AAPL", 168.56f, 161.4f),
-        BasicStock("Coca-Cola", "KO", 54.68f, 53.02f),
-        BasicStock("Facebook", "FB", 311.54f, 304.67f),
-        BasicStock("Johnson & Johnson", "JNJ", 162.07f, 160.22f),
-        BasicStock("Microsoft", "MSFT", 264.11f, 266.71f),
-        BasicStock("NVIDIA", "NVDA", 618.71f, 601.00f),
-        BasicStock("Netflix", "NFLX", 503.28f, 498.33f),
-        BasicStock("Procter & Gamble", "PG", 135.79f, 132.18f),
-        BasicStock("Tesla", "TSLA", 710.44f, 699.68f)
-    )
+    val state = stocksViewModel.state
 
     ThreeDotsLayout("Stocks") {
         Column(
@@ -111,19 +101,24 @@ fun StocksScreen() {
                 .fillMaxWidth()
                 .padding(top = 12.dp)
         ) {
-            SearchBar(onSearch = { /* TODO */
-                Log.d("3dots", "StocksScreen: $it")
-            }, onClear = { /*TODO*/
-                Log.d("3dots", "StocksScreen: CLEAR")
-            })
+            SearchBar(
+                onSearch = { stocksViewModel.searchStocks(it) },
+                onClear = { stocksViewModel.searchStocks("") }
+            )
             Spacer(modifier = Modifier.height(24.dp))
-            Column(
-                modifier = Modifier
-                    .verticalScroll(scrollState),
-            ) {
-                stocks.forEach {
-                    Stock(it, modifier = Modifier.fillMaxWidth(0.9f))
-                    Spacer(modifier = Modifier.height(12.dp))
+            when (state) {
+                is StocksState.Loading -> Loading()
+                is StocksState.Error -> Text(text = state.message)
+                is StocksState.Success -> {
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(scrollState),
+                    ) {
+                        state.stocks.forEach {
+                            Stock(it, modifier = Modifier.fillMaxWidth(0.9f))
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+                    }
                 }
             }
         }

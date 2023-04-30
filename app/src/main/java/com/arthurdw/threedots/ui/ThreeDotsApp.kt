@@ -16,8 +16,8 @@ import com.arthurdw.threedots.ui.screens.PickScreen
 import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen
-import com.arthurdw.threedots.ui.screens.StocksScreen
-import com.arthurdw.threedots.ui.screens.UnlockScreen
+import com.arthurdw.threedots.ui.screens.stocks.StocksScreen
+import com.arthurdw.threedots.ui.screens.unlock.UnlockScreen
 import com.arthurdw.threedots.ui.screens.details.StockDetailsScreen
 import com.arthurdw.threedots.ui.screens.news.NewsScreen
 import com.arthurdw.threedots.ui.screens.overview.OverviewScreen

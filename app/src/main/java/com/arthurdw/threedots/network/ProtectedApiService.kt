@@ -4,6 +4,7 @@ import com.arthurdw.threedots.data.DefaultAppContainer.Companion.PREFIX
 import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.data.objects.PickedStock
 import com.arthurdw.threedots.data.objects.NewsItem
+import com.arthurdw.threedots.data.objects.SearchStock
 import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.data.objects.StockStatus
 import com.arthurdw.threedots.data.objects.StockWorth
@@ -40,4 +41,6 @@ interface ProtectedApiService {
     suspend fun buyStock(@Path("id") id: String, @Query("amount") amount: Float)
     @DELETE("$PREFIX/stock/{id}")
     suspend fun sellStock(@Path("id") id: String, @Query("amount") amount: Float)
+    @GET("$PREFIX/stocks")
+    suspend fun searchStocks(@Query("search") query: String): List<SearchStock>
 }

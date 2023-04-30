@@ -1,4 +1,4 @@
-package com.arthurdw.threedots.ui.screens
+package com.arthurdw.threedots.ui.screens.unlock
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.arthurdw.threedots.R
 import com.arthurdw.threedots.components.Loading
-import com.arthurdw.threedots.ui.screens.unlock.UnlockState
-import com.arthurdw.threedots.ui.screens.unlock.UnlockViewModel
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.State
 

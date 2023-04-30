@@ -8,6 +8,7 @@ import com.arthurdw.threedots.data.objects.StockDetails
 import com.arthurdw.threedots.data.objects.StockStatus
 import com.arthurdw.threedots.data.objects.StockWorth
 import com.arthurdw.threedots.data.objects.User
+import com.arthurdw.threedots.data.objects.toBasicStock
 import com.arthurdw.threedots.network.ProtectedApiService
 import com.arthurdw.threedots.network.PublicApiService
 
@@ -25,6 +26,7 @@ interface Repository {
     suspend fun unfollowStock(symbol: String)
     suspend fun buyStock(symbol: String, amount: Float)
     suspend fun sellStock(symbol: String, amount: Float)
+    suspend fun searchStocks(query: String): List<BasicStock>
 }
 
 class NetworkRepository(
@@ -56,4 +58,6 @@ class NetworkRepository(
 
     override suspend fun sellStock(symbol: String, amount: Float) =
         protectedApiService.sellStock(symbol, amount)
+    override suspend fun searchStocks(query: String): List<BasicStock> =
+        protectedApiService.searchStocks(query).toBasicStock()
 }
