@@ -54,7 +54,6 @@ private fun generateQRCode(content: String): ImageBitmap {
         val bitmap = Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
         return bitmap.asImageBitmap()
     } catch (e: WriterException) {
-        // TODO: Handle exception
         return ImageBitmap(1, 1)
     }
 }
