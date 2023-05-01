@@ -63,7 +63,7 @@ class SettingsViewModel(private val container: AppContainer) : BaseViewModel() {
 
     private fun ensureAllValuesAreSetBeforeIdle() {
         invocationCount++
-        if (invocationCount == 2) {
+        if (invocationCount >= 2) {
             state = SettingsState.Idle
         }
     }
