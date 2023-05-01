@@ -1,8 +1,5 @@
 package com.arthurdw.threedots.ui.screens.news
 
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -84,10 +81,7 @@ fun NewsItemRepresentation(
             .scale(.8f + (.2f * transition))
             .graphicsLayer { rotationX = (1f - transition) * 5f }
             .alpha(min(1f, transition / .2f))
-            .clickable {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(item.url))
-                context.startActivity(intent)
-            },
+            .clickable { context.startActivity(item.getShareIntent()) },
     ) {
         Row(
             horizontalArrangement = Arrangement.Center

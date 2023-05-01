@@ -107,6 +107,7 @@ fun SettingsScreen(
     val user by remember { derivedStateOf { State.LocalUser } }
     val context = LocalContext.current
     var wantToChangePin by remember { mutableStateOf(false) }
+    var wantToChangeNotification by remember { mutableStateOf(false) }
 
     if (wantToChangePin) {
         UnlockScreen(
@@ -140,7 +141,13 @@ fun SettingsScreen(
                             modifier = Modifier.fillMaxWidth(0.9f),
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        SettingsToggle("Notifications:") { /* TODO */ }
+                        SettingsToggle(
+                            "Notifications:",
+                            (settingsViewModel.hasNotificationsEnabled)
+                        ) {
+                            wantToChangeNotification = it
+                            settingsViewModel.setNewsNotifications(context, it)
+                        }
                         SettingsToggle("Protected:", settingsViewModel.hasPadlockEnabled) {
                             wantToChangePin = it
                             if (!it) settingsViewModel.clearPin(context)

@@ -1,5 +1,7 @@
 package com.arthurdw.threedots.data.objects
 
+import android.content.Intent
+import android.net.Uri
 import com.arthurdw.threedots.utils.DateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,5 +18,7 @@ data class NewsItem(
     @SerialName("published_at")
     @Serializable(with = DateTimeSerializer::class)
     val date: Date,
-)
+) {
+    fun getShareIntent() = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+}
 

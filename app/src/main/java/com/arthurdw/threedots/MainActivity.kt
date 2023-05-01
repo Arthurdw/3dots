@@ -10,7 +10,6 @@ import com.arthurdw.threedots.ui.screens.signin.SignInScreen
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.google.android.gms.common.GoogleApiAvailability
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
