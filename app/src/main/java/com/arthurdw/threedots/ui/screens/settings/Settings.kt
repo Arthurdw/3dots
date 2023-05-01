@@ -34,7 +34,7 @@ import com.arthurdw.threedots.components.ManagedInputField
 import com.arthurdw.threedots.ui.screens.unlock.UnlockScreen
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
-import com.arthurdw.threedots.utils.hashString
+import com.arthurdw.threedots.utils.hashSmallString
 
 @Composable
 fun BaseText(value: String, modifier: Modifier = Modifier) {
@@ -114,7 +114,7 @@ fun SettingsScreen(
         UnlockScreen(
             text = "Enter a pin to protect your account",
             onSuccess = {
-                val code = hashString(it)
+                val code = hashSmallString(it)
                 settingsViewModel.changePin(context, code)
                 wantToChangePin = false
             },

@@ -4,9 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.arthurdw.threedots.data.AppContainer
-import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.utils.BaseViewModel
-import com.arthurdw.threedots.utils.hashString
+import com.arthurdw.threedots.utils.hashSmallString
 
 sealed interface UnlockState {
     object Idle : UnlockState
@@ -30,7 +29,7 @@ class UnlockViewModel(private val container: AppContainer) : BaseViewModel() {
                 state = UnlockState.Success
                 return@wrapRepositoryAction
             }
-            val hashedCode = hashString(code)
+            val hashedCode = hashSmallString(code)
             if (padlock != hashedCode) {
                 state = UnlockState.Error("Wrong code")
                 return@wrapRepositoryAction
