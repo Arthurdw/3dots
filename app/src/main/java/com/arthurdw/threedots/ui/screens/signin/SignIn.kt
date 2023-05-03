@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -152,7 +153,7 @@ fun SignIn(
             ) {
                 Image(
                     painter = icon,
-                    contentDescription = "Icon",
+                    contentDescription = stringResource(R.string.icon),
                     modifier = Modifier
                         .size(350.dp)
                         .background(color = MaterialTheme.colorScheme.background)
@@ -183,7 +184,7 @@ fun SignIn(
                     },
                     onFail = {
                         isLoading.value = false
-                        Toast.makeText(context, "Failed to sign in", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.failed_to_sign_in), Toast.LENGTH_SHORT).show()
                     }
                 )
             }

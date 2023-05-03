@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import com.arthurdw.threedots.data.NetworkRepository
 import com.arthurdw.threedots.data.objects.BasicStock
 import com.arthurdw.threedots.utils.BaseViewModel
+import com.arthurdw.threedots.utils.empty
 
 sealed interface StocksState {
     object Loading : StocksState
@@ -18,7 +19,7 @@ class StocksViewModel(private val networkRepository: NetworkRepository) : BaseVi
         private set
 
     init {
-        searchStocks("")
+        searchStocks(String.empty())
     }
 
     fun searchStocks(query: String) {

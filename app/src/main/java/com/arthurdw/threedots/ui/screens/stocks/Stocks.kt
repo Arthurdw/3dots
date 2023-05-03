@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,6 +34,7 @@ import com.arthurdw.threedots.components.InputField
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Stock
 import com.arthurdw.threedots.utils.PreviewWrapper
+import com.arthurdw.threedots.utils.empty
 
 
 @Composable
@@ -40,11 +42,12 @@ fun SearchBar(
     onSearch: (String) -> Unit,
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = "Search",
+    placeholderStr: String? = null,
 ) {
-    var query by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf(String.empty()) }
     val searchIcon = painterResource(R.drawable.ic_search)
     val clearIcon = painterResource(R.drawable.ic_exit)
+    val placeholder = placeholderStr ?: stringResource(R.string.search)
 
 
     Row(
@@ -60,11 +63,11 @@ fun SearchBar(
                 if (query.isNotEmpty()) {
                     Image(
                         painter = clearIcon,
-                        contentDescription = "Clear",
+                        contentDescription = stringResource(R.string.clear),
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
-                                query = ""
+                                query = String.empty()
                                 onClear()
                             },
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
@@ -72,7 +75,7 @@ fun SearchBar(
                 } else {
                     Image(
                         painter = searchIcon,
-                        contentDescription = "Search",
+                        contentDescription = stringResource(R.string.search),
                         modifier = Modifier
                             .size(24.dp)
                             .clickable { onSearch(query) },
@@ -94,10 +97,10 @@ fun StocksScreen(
 ) {
     val scrollState = rememberScrollState()
     val state = stocksViewModel.state
-    var query by remember { mutableStateOf("") }
+    var query by remember { mutableStateOf(String.empty()) }
 
 
-    ThreeDotsLayout("Stocks") {
+    ThreeDotsLayout(stringResource(R.string.stocks)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -110,8 +113,8 @@ fun StocksScreen(
                     query = it
                 },
                 onClear = {
-                    stocksViewModel.searchStocks("")
-                    query = ""
+                    stocksViewModel.searchStocks(String.empty())
+                    query = String.empty()
                 }
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -119,11 +122,11 @@ fun StocksScreen(
                 is StocksState.Loading -> Loading()
                 is StocksState.Error -> {
                     Text(
-                        "Failed to load stocks...",
+                        stringResource(R.string.failed_to_load_stocks),
                         modifier = Modifier.padding(bottom = 12.dp)
                     )
                     TextButton(onClick = { stocksViewModel.searchStocks(query) }) {
-                        Text(text = "Retry")
+                        Text(text = stringResource(R.string.retry))
                     }
                 }
 

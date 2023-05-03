@@ -12,9 +12,11 @@ import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.data.AppContainer
 import com.arthurdw.threedots.utils.BaseViewModel
 import com.arthurdw.threedots.utils.State
+import com.arthurdw.threedots.utils.empty
 import com.arthurdw.threedots.workers.NewsWorker
 import java.util.concurrent.TimeUnit
 
@@ -48,7 +50,7 @@ class SettingsViewModel(private val container: AppContainer) : BaseViewModel() {
         }
     }
 
-    fun clearPin(context: Context) = changePin(context, "")
+    fun clearPin(context: Context) = changePin(context, String.empty())
 
     fun setNewsNotifications(context: Context, enabled: Boolean) {
         wrapRepositoryAction({ Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }) {
@@ -99,28 +101,28 @@ class SettingsViewModel(private val container: AppContainer) : BaseViewModel() {
         val newsWorker = PeriodicWorkRequestBuilder<NewsWorker>(
             1,
             TimeUnit.HOURS
-        ).addTag("news").build()
+        ).addTag(context.getString(R.string.notifications_tag)).build()
         WorkManager.getInstance(context).enqueue(newsWorker)
     }
 
     private fun disableNewsNotificationsWorker(context: Context) {
-        WorkManager.getInstance(context).cancelAllWorkByTag("news")
+        WorkManager.getInstance(context).cancelAllWorkByTag(context.getString(R.string.notifications_tag))
     }
 
     fun changeUsername(context: Context, username: String) {
         wrapRepositoryAction({ Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }) {
             if (username.isEmpty()) {
-                Toast.makeText(context, "Username can not be empty!", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.username_can_not_be_empty), Toast.LENGTH_LONG).show()
             } else if (username.length > 20) {
                 Toast.makeText(
                     context,
-                    "Username can not be longer than 20 characters!",
+                    context.getString(R.string.username_can_not_be_longer_than_20_characters),
                     Toast.LENGTH_LONG
                 ).show()
             } else if (username.length < 3) {
                 Toast.makeText(
                     context,
-                    "Username can not be shorter than 3 characters!",
+                    context.getString(R.string.username_can_not_be_shorter_than_3_characters),
                     Toast.LENGTH_LONG
                 ).show()
             } else {

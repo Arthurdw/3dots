@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -191,17 +192,17 @@ fun Sidebar(
         ) {
             NavIcon(
                 R.drawable.ic_exit,
-                "Close",
+                stringResource(R.string.close),
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp)
             )
 
             Column {
                 val navItems = listOf(
-                    NavItem("Home", Screens.Overview),
-                    NavItem("Stocks", Screens.Stocks),
-                    NavItem("News", Screens.News),
-                    NavItem("Share", Screens.Share),
-                    NavItem("Scan", Screens.Scan)
+                    NavItem(stringResource(R.string.home), Screens.Overview),
+                    NavItem(stringResource(R.string.stocks), Screens.Stocks),
+                    NavItem(stringResource(R.string.news), Screens.News),
+                    NavItem(stringResource(R.string.share), Screens.Share),
+                    NavItem(stringResource(R.string.scan), Screens.Scan)
                 )
 
                 navItems.forEach {
@@ -227,13 +228,13 @@ fun Sidebar(
             ) {
                 NavIcon(
                     R.drawable.ic_settings,
-                    "Settings",
+                    stringResource(R.string.settings),
                     Screens.Settings,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 NavIcon(
                     R.drawable.ic_logout,
-                    "Logout",
+                    stringResource(R.string.logout),
                     Screens.SignInWith,
                     modifier = Modifier.padding(bottom = 16.dp),
                     onClick = onSignOut

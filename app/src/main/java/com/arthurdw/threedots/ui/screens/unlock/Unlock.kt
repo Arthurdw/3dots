@@ -21,7 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,11 +33,17 @@ import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.ThreeDotsTheme
 import com.arthurdw.threedots.utils.State
+import com.arthurdw.threedots.utils.empty
 
 val insertedState by lazy { mutableStateListOf<String>() }
 
 @Composable
-fun UnlockKey(key: String, modifier: Modifier = Modifier) {
+fun UnlockKey(
+    key: String,
+    clear: String = stringResource(R.string.keypad_clear),
+    delete: String = stringResource(R.string.keypad_delete),
+    modifier: Modifier = Modifier
+) {
     Text(
         key,
         style = MaterialTheme.typography.bodyLarge,
@@ -43,14 +51,8 @@ fun UnlockKey(key: String, modifier: Modifier = Modifier) {
         textAlign = TextAlign.Center,
         modifier = modifier.clickable {
             when (key) {
-                "C" -> {
-                    insertedState.clear()
-                }
-
-                "DEL" -> {
-                    insertedState.removeLastOrNull()
-                }
-
+                clear ->  insertedState.clear()
+                delete -> insertedState.removeLastOrNull()
                 else -> {
                     if (insertedState.size < 5) {
                         insertedState.add(key)
@@ -63,11 +65,19 @@ fun UnlockKey(key: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun UnlockKeyboard(modifier: Modifier = Modifier) {
-    val chars = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "C", "DEL")
+    val clear = stringResource(R.string.keypad_clear)
+    val delete = stringResource(R.string.keypad_delete)
+
+    val chars = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "0", clear, delete)
 
     LazyVerticalGrid(columns = GridCells.Fixed(3), content = {
         items(chars.size) { index ->
-            UnlockKey(chars[index], modifier = Modifier.padding(top = 20.dp, bottom = 20.dp))
+            UnlockKey(
+                chars[index],
+                clear = clear,
+                delete = delete,
+                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
+            )
         }
     }, modifier = modifier)
 }
@@ -114,7 +124,7 @@ fun Unlock(
     val icon = painterResource(id = R.drawable.ic_dots)
 
     if (insertedState.size == 5) {
-        val joined = insertedState.joinToString("")
+        val joined = insertedState.joinToString(String.empty())
         insertedState.clear()
         onUnlock(joined)
     }
@@ -129,7 +139,7 @@ fun Unlock(
         ) {
             Image(
                 painter = icon,
-                contentDescription = "Icon",
+                contentDescription = stringResource(R.string.icon),
                 modifier = Modifier
                     .size(200.dp)
                     .background(color = MaterialTheme.colorScheme.background),
@@ -171,9 +181,11 @@ fun UnlockScreen(
     disableCheck: Boolean = false,
     onSuccess: (String) -> Unit = {},
 ) {
+    val context = LocalContext.current
     val navController = State.LocalNavController.current
+
     fun unlock(code: String) {
-        if (!disableCheck) unlockViewModel.unlock(code)
+        if (!disableCheck) unlockViewModel.unlock(context, code)
         else onSuccess(code)
     }
     when (val state = unlockViewModel.state) {

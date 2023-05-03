@@ -17,9 +17,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Stock
@@ -88,7 +90,7 @@ fun OverviewScreenContent(
         ) {
             when (worthState) {
                 is WorthState.Loading -> Loading()
-                is WorthState.Error -> Text(text = "Error")
+                is WorthState.Error -> Text(text = worthState.message)
                 is WorthState.Success -> {
                     val worth = worthState.value
                     if (worth.isNotEmpty()) {
@@ -110,15 +112,15 @@ fun OverviewScreenContent(
                 }
             }
 
-            BalanceStatistic("Spent:", user.spent, modifier = Modifier.padding(top = 20.dp))
-            BalanceStatistic("Gained:", user.gained)
+            BalanceStatistic(stringResource(R.string.spent), user.spent, modifier = Modifier.padding(top = 20.dp))
+            BalanceStatistic(stringResource(R.string.gained), user.gained)
 
             when (pickedStocksState) {
                 is PickedStocksState.Loading -> Loading()
-                is PickedStocksState.Error -> Text(text = "Error")
+                is PickedStocksState.Error -> Text(text = pickedStocksState.message)
                 is PickedStocksState.Success ->
                     StocksSection(
-                        "Picked stocks",
+                        stringResource(R.string.picked_stocks),
                         pickedStocksState.value.toBasicStocks(),
                         modifier = Modifier.padding(top = 20.dp)
                     )
@@ -126,10 +128,10 @@ fun OverviewScreenContent(
 
             when (followedStocksState) {
                 is FollowedStocksState.Loading -> Loading()
-                is FollowedStocksState.Error -> Text(text = "Error")
+                is FollowedStocksState.Error -> Text(text = followedStocksState.message)
                 is FollowedStocksState.Success ->
                     StocksSection(
-                        "Watchlist",
+                        stringResource(R.string.watchlist),
                         followedStocksState.value,
                         modifier = Modifier.padding(top = 20.dp, bottom = 20.dp)
                     )
@@ -163,7 +165,6 @@ fun OverviewScreen(
     shareUserSerialized: String? = null,
     modifier: Modifier = Modifier,
 ) {
-    Log.d("3dots", "OverviewScreen")
     if (shareUserSerialized != null) {
         val shareUser = Json.decodeFromString(ShareUser.serializer(), shareUserSerialized)
         OverviewScreenContent(

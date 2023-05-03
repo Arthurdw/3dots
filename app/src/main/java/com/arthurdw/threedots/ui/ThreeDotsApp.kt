@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.arthurdw.threedots.ui.screens.PickScreen
+import com.arthurdw.threedots.ui.screens.pick.PickScreen
 import com.arthurdw.threedots.ui.screens.ScanScreen
 import com.arthurdw.threedots.ui.screens.settings.SettingsScreen
 import com.arthurdw.threedots.ui.screens.ShareScreen

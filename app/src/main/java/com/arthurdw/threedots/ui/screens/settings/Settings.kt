@@ -1,7 +1,6 @@
 package com.arthurdw.threedots.ui.screens.settings
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,10 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.ManagedInputField
@@ -67,10 +68,7 @@ fun SettingsSwitch(onToggle: (Boolean) -> Unit, initialValue: Boolean = true) {
 
     Switch(
         checked = initialValue,
-        onCheckedChange = {
-            Log.d("SettingsSwitch", "onCheckedChange: $it")
-            onToggle(it)
-        },
+        onCheckedChange = { onToggle(it) },
         modifier = Modifier.padding(end = 16.dp), colors = SwitchDefaults.colors(
             checkedThumbColor = MaterialTheme.colorScheme.primary,
             uncheckedThumbColor = MaterialTheme.colorScheme.primary,
@@ -112,7 +110,7 @@ fun SettingsScreen(
 
     if (wantToChangePin) {
         UnlockScreen(
-            text = "Enter a pin to protect your account",
+            text = stringResource(R.string.enter_a_pin_to_protect_your_account),
             onSuccess = {
                 val code = hashSmallString(it)
                 settingsViewModel.changePin(context, code)
@@ -123,7 +121,7 @@ fun SettingsScreen(
         return
     }
 
-    ThreeDotsLayout("Settings") {
+    ThreeDotsLayout(stringResource(R.string.settings)) {
         when (settingsViewModel.state) {
             SettingsState.Idle -> {
                 Column(
@@ -136,7 +134,7 @@ fun SettingsScreen(
                             .fillMaxWidth()
                             .padding(top = 16.dp)
                     ) {
-                        SettingsText("Change username:", Modifier.padding(bottom = 8.dp))
+                        SettingsText(stringResource(R.string.change_username), Modifier.padding(bottom = 8.dp))
                         ManagedInputField(
                             onComplete = { settingsViewModel.changeUsername(context, it) },
                             value = State.CurrentUser.username,
@@ -144,13 +142,13 @@ fun SettingsScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         SettingsToggle(
-                            "Notifications:",
+                            stringResource(R.string.notifications),
                             (settingsViewModel.hasNotificationsEnabled)
                         ) {
                             wantToChangeNotification = it
                             settingsViewModel.setNewsNotifications(context, it)
                         }
-                        SettingsToggle("Protected:", settingsViewModel.hasPadlockEnabled) {
+                        SettingsToggle(stringResource(R.string.padlock), settingsViewModel.hasPadlockEnabled) {
                             wantToChangePin = it
                             if (!it) settingsViewModel.clearPin(context)
                         }
@@ -162,18 +160,18 @@ fun SettingsScreen(
                             .padding(bottom = 16.dp)
                     ) {
                         Text(
-                            text = "About",
+                            text = stringResource(R.string.about),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth(0.9f)
                         )
                         SplitBetween {
-                            BaseText("App Version:")
+                            BaseText(stringResource(R.string.app_version))
                             // TODO: Get this version number dynamically
                             BaseText("0.0.1")
                         }
                         SplitBetween {
-                            BaseText("User ID:")
+                            BaseText(stringResource(R.string.user_id))
                             SmallText(user.id)
                         }
                     }
