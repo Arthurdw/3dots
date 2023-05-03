@@ -17,6 +17,14 @@ private const val UNKNOWN_ERROR = "Unknown error"
 private const val BASE_ERROR = "An error occurred while fetching a resource: "
 
 abstract class BaseViewModel : ViewModel() {
+    /**
+     * Logs an error message and throws an exception with the given message. If [onError] is not
+     * an empty lambda, the error message is also passed to that lambda.
+     *
+     * @param message The error message to log and throw.
+     * @param onError A lambda to call with the error message, if not an empty lambda.
+     * @throws Exception Always throws an exception with the given message.
+     */
     private fun throwException(message: String, onError: (String) -> Unit) {
         val currentClassName = this::class.java.simpleName
         Log.e(currentClassName, message)
@@ -25,6 +33,19 @@ abstract class BaseViewModel : ViewModel() {
 
     }
 
+    /**
+     * Wraps the given suspend [action] in a coroutine launched on the current [viewModelScope].
+     * If the action throws an [HttpException], logs an error message with the response body, or
+     * "Unknown error" if the response body is null. Otherwise, logs an error message with the
+     * exception message, or "Unknown error" if the message is null. If [onError] is not an empty
+     * lambda, passes the error message to that lambda. Always throws an exception with the error
+     * message if [onError] is an empty lambda.
+     *
+     * @param onError A lambda to call with the error message, if not an empty lambda.
+     * @param action The suspend function to wrap in a coroutine.
+     * @throws Exception Always throws an exception with the error message if [onError] is an empty
+     * lambda.
+     */
     protected fun wrapRepositoryAction(onError: (String) -> Unit = {}, action: suspend () -> Unit) {
         viewModelScope.launch {
             try {
@@ -41,26 +62,47 @@ abstract class BaseViewModel : ViewModel() {
             }
         }
     }
-
     companion object {
-        inline fun <reified VM : BaseViewModel> createFactory(): ViewModelProvider.Factory {
+        /**
+         * Creates a [ViewModelProvider.Factory] for the given [BaseViewModel] subtype using a
+         * [viewModelFactory] builder with a [initializer] that injects a [T] from the
+         * [ThreeDotsApplication]'s [AppContainer] into the view model constructor.
+         *
+         * @param T The type of object to be injected into the view model constructor.
+         * @return A [ViewModelProvider.Factory] for the given [BaseViewModel] subtype.
+         */
+        inline fun <reified VM : BaseViewModel, reified T : Any> createFactory(
+            crossinline injectionFunction: (AppContainer) -> T
+        ): ViewModelProvider.Factory {
             return viewModelFactory {
                 initializer {
                     val application = (this[APPLICATION_KEY] as ThreeDotsApplication)
-                    val repository = application.container.networkRepository
-                    VM::class.java.getConstructor(NetworkRepository::class.java).newInstance(repository)
+                    val injectionObject = injectionFunction(application.container)
+                    VM::class.java.getConstructor(T::class.java).newInstance(injectionObject)
                 }
             }
         }
 
+        /**
+         * Creates a [ViewModelProvider.Factory] for the given [BaseViewModel] subtype using a
+         * [viewModelFactory] builder with a [initializer] that injects a [NetworkRepository] from the
+         * [ThreeDotsApplication]'s [AppContainer] into the view model constructor.
+         *
+         * @return A [ViewModelProvider.Factory] for the given [BaseViewModel] subtype.
+         */
+        inline fun <reified VM : BaseViewModel> createFactory(): ViewModelProvider.Factory {
+            return createFactory<VM, NetworkRepository> { it.networkRepository }
+        }
+
+        /**
+         * Creates a [ViewModelProvider.Factory] for the given [BaseViewModel] subtype using a
+         * [viewModelFactory] builder with a [initializer] that injects an [AppContainer] from the
+         * [ThreeDotsApplication] into the view model constructor.
+         *
+         * @return A [ViewModelProvider.Factory] for the given [BaseViewModel] subtype.
+         */
         inline fun <reified VM : BaseViewModel> createFactoryContainer(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    val application = (this[APPLICATION_KEY] as ThreeDotsApplication)
-                    val container = application.container
-                    VM::class.java.getConstructor(AppContainer::class.java).newInstance(container)
-                }
-            }
+            return createFactory<VM, AppContainer> { it }
         }
     }
 }
