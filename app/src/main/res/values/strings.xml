@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">3dots</string>
-    <string name="default_web_client_id">493568688507-dhl0k9kd0cl2ig4s3e1m43e21ie2du0o.apps.googleusercontent.com</string>
-    <string name="BASE_URL">https://3dots.xiler.net</string>
+    <string name="default_web_client_id">EDIT THIS</string>
+    <string name="BASE_URL">EDIT THIS</string>
     <string name="failed_get_to_your_personal_data">Failed get to your personal data...</string>
     <string name="retry">Retry</string>
     <string name="your_stock">Your stock</string>

@@ -1,0 +1,14 @@
+# Data proxy tab at "https://cloud.prisma.io"
+DATABASE_URL="prisma://..."
+
+JWT_SECRET="super-secret-key-here"
+
+# https://console.cloud.google.com/apis/credential
+GOOGLE_APP_ID="your google app id here"
+GOOGLE_WEB_ID="your google web id here"
+
+# Get your own API key from "https://www.marketaux.com/"
+NEWS_API_TOKEN="my-token"
+
+# Get your own API key from "https://www.alphavantage.co/"
+STOCKS_API_TOKEN="my-token"

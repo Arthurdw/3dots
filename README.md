@@ -12,13 +12,29 @@ The `api` folder contains a Hono Cloudflare Workers Edge API, which uses PlanetS
 
 ## 🚀 Installation
 
+## Backend
+
 To run the backend (the API), follow these steps:
 
 Choose a node package manager of your choice, for example [`pnpm`](https://pnpm.io/).
 
 1. Navigate to the `api` folder in your terminal.
-2. Install dependencies using your preferred package manager: `pnpm install`
-3. Start the API: `pnpm dev`
+2. Copy the .dev.vars file.example to .dev.vars and fill in the required values.
+3. Install dependencies using your preferred package manager: `pnpm install`
+4. Generate the prisma edge client: `pnpm prisma generate  --data-proxy`
+5. Push the db schema to PlanetScale: `pnpm prisma db push`
+6. Start the API: `pnpm dev`
+
+## Frontend
+
+To run the frontend (the Android app), follow these steps:
+
+1. Open the project in Android Studio.
+2. Open the strings.xml file in the `app/src/main/res/values` folder.
+3. Edit the `default_web_client_id` to match your backend's google web id.
+4. Change the base url to match your backend's url.
+5. Run the app.
+6. Enjoy!
 
 ## 📸 Demo
 
