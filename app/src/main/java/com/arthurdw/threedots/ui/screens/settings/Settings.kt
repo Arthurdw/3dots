@@ -105,7 +105,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory),
 ) {
-    val user by remember { derivedStateOf { State.LocalUser } }
+    val user by remember { derivedStateOf { State.CurrentUser } }
     val context = LocalContext.current
     var wantToChangePin by remember { mutableStateOf(false) }
     var wantToChangeNotification by remember { mutableStateOf(false) }
@@ -139,7 +139,7 @@ fun SettingsScreen(
                         SettingsText("Change username:", Modifier.padding(bottom = 8.dp))
                         ManagedInputField(
                             onComplete = { settingsViewModel.changeUsername(context, it) },
-                            value = State.LocalUser.username,
+                            value = State.CurrentUser.username,
                             modifier = Modifier.fillMaxWidth(0.9f),
                         )
                         Spacer(modifier = Modifier.height(12.dp))

@@ -50,14 +50,14 @@ enum class Screens(val route: String) {
 fun ThreeDotsApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
-    CompositionLocalProvider(State.NavController provides navController) {
+    CompositionLocalProvider(State.LocalNavController provides navController) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
             NavHost(navController, startDestination = Screens.SignInWith.route) {
                 composable(Screens.SignInWith.route) { SignInScreen() }
-                composable(Screens.Unlock.route) { UnlockScreen(text = "Welcome back, ${State.LocalUser.username}!") }
+                composable(Screens.Unlock.route) { UnlockScreen(text = "Welcome back, ${State.CurrentUser.username}!") }
                 composable(Screens.Overview.route) { OverviewScreen(null) }
                 composable(
                     Screens.Overview.route + "/{id}",

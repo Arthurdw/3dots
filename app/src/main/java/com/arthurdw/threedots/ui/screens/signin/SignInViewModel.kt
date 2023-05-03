@@ -38,7 +38,7 @@ class SignInViewModel(private val container: AppContainer) : BaseViewModel() {
     }
 
     private suspend fun setLocalUser() {
-        State.LocalUser = container.networkRepository.getMe()
+        State.CurrentUser = container.networkRepository.getMe()
         state = SignInState.Success
     }
 
@@ -47,7 +47,7 @@ class SignInViewModel(private val container: AppContainer) : BaseViewModel() {
             state = SignInState.Loading
             container.offlineRepository.getSessionToken()?.let {
                 Log.d("SignInViewModel", "Found session token: $it")
-                State.LocalApiToken = it
+                State.ApiToken = it
                 wasAlreadySignedIn = true
                 setLocalUser()
             } ?: run {
@@ -60,9 +60,9 @@ class SignInViewModel(private val container: AppContainer) : BaseViewModel() {
     fun signIn(token: String) {
         wrapRepositoryAction({ state = SignInState.Error(it) }) {
             state = SignInState.Loading
-            State.LocalApiToken = container.networkRepository.loginOrRegister(token)
-            Log.d("SignInViewModel", "Token: ${State.LocalApiToken}")
-            container.offlineRepository.setSessionToken(State.LocalApiToken)
+            State.ApiToken = container.networkRepository.loginOrRegister(token)
+            Log.d("SignInViewModel", "Token: ${State.ApiToken}")
+            container.offlineRepository.setSessionToken(State.ApiToken)
             setLocalUser()
         }
     }

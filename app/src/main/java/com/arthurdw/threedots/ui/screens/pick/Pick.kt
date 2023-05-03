@@ -155,7 +155,7 @@ fun PickScreen(
 ) {
     val title = if (sell) "Sell" else "Buy"
     val uiState = pickViewModel.state
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
     var requestedStockWorth by remember { mutableStateOf(false) }
 
     if (!requestedStockWorth) {

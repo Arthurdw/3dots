@@ -13,7 +13,7 @@ import com.arthurdw.threedots.utils.State
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 fun ScanScreen() {
     val context = LocalContext.current
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
 
     ThreeDotsLayout("Scan") {
         QRScanner(

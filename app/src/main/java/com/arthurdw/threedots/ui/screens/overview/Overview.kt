@@ -143,7 +143,7 @@ fun OverviewScreenCurrentUser(
     overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory),
     modifier: Modifier = Modifier,
 ) {
-    val user by remember { derivedStateOf { State.LocalUser } }
+    val user by remember { derivedStateOf { State.CurrentUser } }
 
     val worthState = overviewViewModel.worthState
     val pickedStocksState = overviewViewModel.pickedStocksState

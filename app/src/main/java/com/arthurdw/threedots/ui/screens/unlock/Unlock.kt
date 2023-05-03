@@ -171,7 +171,7 @@ fun UnlockScreen(
     disableCheck: Boolean = false,
     onSuccess: (String) -> Unit = {},
 ) {
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
     fun unlock(code: String) {
         if (!disableCheck) unlockViewModel.unlock(code)
         else onSuccess(code)
@@ -201,6 +201,6 @@ fun UnlockScreen(
 @Composable
 fun UnlockPreview() {
     ThreeDotsTheme {
-        Unlock(text = "Welcome back ${State.LocalUser.username}!")
+        Unlock(text = "Welcome back ${State.CurrentUser.username}!")
     }
 }

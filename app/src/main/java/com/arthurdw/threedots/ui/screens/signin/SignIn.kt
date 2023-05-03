@@ -92,7 +92,7 @@ fun SignInScreen(
     signInViewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory),
     modifier: Modifier = Modifier
 ) {
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
     if (signInViewModel.wasAlreadySignedIn && signInViewModel.state is SignInState.Loading) {
         Loading()
     } else if (signInViewModel.wasAlreadySignedIn && signInViewModel.state is SignInState.Success) {
@@ -114,7 +114,7 @@ fun SignIn(
 ) {
     val context = LocalContext.current as Activity
     val icon = painterResource(id = R.drawable.ic_launcher_foreground)
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
     val isLoading = remember { mutableStateOf(false) }
     val hasHadApiError = remember { mutableStateOf(false) }
 

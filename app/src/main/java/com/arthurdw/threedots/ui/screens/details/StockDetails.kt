@@ -94,7 +94,7 @@ fun StockDetailsContent(
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
 
     val minimumValue = stock.intraday.min()
     val maximumValue = stock.intraday.max()

@@ -125,7 +125,7 @@ class SettingsViewModel(private val container: AppContainer) : BaseViewModel() {
                 ).show()
             } else {
                 state = SettingsState.Loading
-                State.LocalUser = container.networkRepository.changeUsername(username)
+                State.CurrentUser = container.networkRepository.changeUsername(username)
                 state = SettingsState.Idle
             }
         }

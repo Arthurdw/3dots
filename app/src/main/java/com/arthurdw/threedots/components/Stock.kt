@@ -28,7 +28,7 @@ import com.arthurdw.threedots.utils.toCurrencyString
 
 @Composable
 fun Stock(stock: BasicStock, modifier: Modifier = Modifier) {
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
 
     Box(
         modifier = modifier

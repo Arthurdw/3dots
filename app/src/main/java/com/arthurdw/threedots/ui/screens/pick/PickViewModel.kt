@@ -30,13 +30,13 @@ class PickViewModel(private val networkRepository: NetworkRepository) : BaseView
     fun buyStock(symbol: String, amount: Float) =
         performAction {
             networkRepository.buyStock(symbol, amount)
-            State.LocalUser = networkRepository.getMe()
+            State.CurrentUser = networkRepository.getMe()
         }
 
     fun sellStock(symbol: String, amount: Float) =
         performAction {
             networkRepository.sellStock(symbol, amount)
-            State.LocalUser = networkRepository.getMe()
+            State.CurrentUser = networkRepository.getMe()
         }
 
     fun initStock(symbol: String) {

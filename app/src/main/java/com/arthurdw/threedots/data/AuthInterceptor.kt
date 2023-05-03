@@ -8,7 +8,7 @@ class AuthInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
             .newBuilder()
-            .addHeader("Authorization", "Bearer ${State.LocalApiToken}")
+            .addHeader("Authorization", "Bearer ${State.ApiToken}")
             .build()
 
         return chain.proceed(request)

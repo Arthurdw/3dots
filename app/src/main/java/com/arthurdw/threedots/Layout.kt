@@ -46,7 +46,7 @@ import com.arthurdw.threedots.utils.createGoogleSignInClient
 
 @Composable
 fun QuickNav() {
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
 
     @Composable
     fun NavItem(
@@ -149,7 +149,7 @@ fun Sidebar(
 ) {
     val displayMetrics = Resources.getSystem().displayMetrics
     val screenHeight = displayMetrics.heightPixels / displayMetrics.density
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
 
     data class NavItem(val text: String, val screen: Screens)
 
@@ -256,7 +256,7 @@ fun ThreeDotsLayout(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val navController = State.NavController.current
+    val navController = State.LocalNavController.current
     val isSidebarOpen = remember { mutableStateOf(false) }
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {

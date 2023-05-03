@@ -75,7 +75,7 @@ fun ShareScreen(
     modifier: Modifier = Modifier,
     overviewViewModel: OverviewViewModel = viewModel(factory = OverviewViewModel.Factory)
 ) {
-    val user by remember { derivedStateOf { State.LocalUser } }
+    val user by remember { derivedStateOf { State.CurrentUser } }
     val worthState = overviewViewModel.worthState
     val pickedStocksState = overviewViewModel.pickedStocksState
     val followedStocksState = overviewViewModel.followedStocksState
