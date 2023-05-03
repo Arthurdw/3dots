@@ -1,6 +1,8 @@
 # 📈 Stock Market Simulation App
 
-Welcome to the Stock Market Simulation App! This app is designed to allow users to simulate buying and selling stocks, add them to their watchlist, view stock details, and share their profiles with others.
+Welcome to the Stock Market Simulation App! This app is designed to allow users to simulate buying
+and selling stocks, add them to their watchlist, view stock details, and share their profiles with
+others.
 
 ## 📁 Project Structure
 
@@ -8,7 +10,8 @@ The project is structured into two important folders: `app` and `api`.
 
 The `app` folder contains the Android app, which was made using Kotlin.
 
-The `api` folder contains a Hono Cloudflare Workers Edge API, which uses PlanetScale as a serverless database. The API was created using TypeScript.
+The `api` folder contains a Hono Cloudflare Workers Edge API, which uses PlanetScale as a serverless
+database. The API was created using TypeScript.
 
 ## 🚀 Installation
 
@@ -21,7 +24,7 @@ Choose a node package manager of your choice, for example [`pnpm`](https://pnpm.
 1. Navigate to the `api` folder in your terminal.
 2. Copy the .dev.vars file.example to .dev.vars and fill in the required values.
 3. Install dependencies using your preferred package manager: `pnpm install`
-4. Generate the prisma edge client: `pnpm prisma generate  --data-proxy`
+4. Generate the prisma edge client: `pnpm prisma generate --data-proxy`
 5. Push the db schema to PlanetScale: `pnpm prisma db push`
 6. Start the API: `pnpm dev`
 
@@ -38,12 +41,24 @@ To run the frontend (the Android app), follow these steps:
 
 ## 📸 Demo
 
-// DEMO IMAGES HERE
+![Sign in with Google](./.readme_assets/google_sso.jpg)
+![Unlock screen](./.readme_assets/unlock.jpg)
+![Overview](./.readme_assets/overview.jpg)
+![Overview scrolled down](./.readme_assets/overview2.jpg)
+![News](./.readme_assets/news.jpg)
+![Stock search](./.readme_assets/stocks.jpg)
+![Stock details](./.readme_assets/stock.jpg)
+![Stock buy](./.readme_assets/buy_stock.jpg)
+![Share profile](./.readme_assets/share.jpg)
+![Scan profile](./.readme_assets/scan.jpg)
+![Settings](./.readme_assets/settings.jpg)
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the **[LICENSE](./LICENSE)** file for more information.
+This project is licensed under the MIT License. See the **[LICENSE](./LICENSE)** file for more
+information.
 
 ---
 
-Created by Arthur De Witte for the Native Mobile Apps course *(part of the Applied Computer Science study)* at Howest University.
+Created by Arthur De Witte for the Native Mobile Apps course *(part of the Applied Computer Science
+study)* at Howest University.
