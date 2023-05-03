@@ -26,7 +26,7 @@ Choose a node package manager of your choice, for example [`pnpm`](https://pnpm.
 
 ## 📝 License
 
-This project is licensed under the MIT License. See the __**[LICENSE](./LICENSE)**__ file for more information.
+This project is licensed under the MIT License. See the **[LICENSE](./LICENSE)** file for more information.
 
 ---
 

@@ -66,7 +66,6 @@ fun Stock(stock: BasicStock, modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
-            Log.d("3dots", "Stock: $stock")
             Text(
                 text = stock.roiFormatted,
                 style = MaterialTheme.typography.labelLarge,

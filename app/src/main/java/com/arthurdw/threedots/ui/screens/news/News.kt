@@ -31,10 +31,12 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.components.Ripple
@@ -96,7 +98,7 @@ fun NewsItemRepresentation(
                             .size(100.dp)
                             .clip(RoundedCornerShape(12.dp)),
                         painter = painter,
-                        contentDescription = "Image fitting to article",
+                        contentDescription = stringResource(R.string.image_fitting_to_article),
                         contentScale = ContentScale.Crop,
                     )
                     ArticleDetails()
@@ -150,10 +152,10 @@ fun NewsScreen(
 ) {
     val state = newsViewModel.state
 
-    ThreeDotsLayout("News") {
+    ThreeDotsLayout(stringResource(R.string.news)) {
         when (state) {
             is NewsState.Success -> News(state)
-            is NewsState.Error -> Text(text = "Error")
+            is NewsState.Error -> Text(text = state.message)
             is NewsState.Loading -> Loading()
         }
     }

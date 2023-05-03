@@ -20,10 +20,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.ThreeDotsLayout
 import com.arthurdw.threedots.components.Loading
 import com.arthurdw.threedots.data.objects.StockDetails
@@ -31,6 +33,7 @@ import com.arthurdw.threedots.ui.Screens
 import com.arthurdw.threedots.ui.theme.rememberChartStyle
 import com.arthurdw.threedots.utils.PreviewWrapper
 import com.arthurdw.threedots.utils.State
+import com.arthurdw.threedots.utils.empty
 import com.arthurdw.threedots.utils.toCurrencyString
 import com.arthurdw.threedots.utils.toDateString
 import com.arthurdw.threedots.utils.toPercentageString
@@ -123,10 +126,10 @@ fun StockDetailsContent(
         when (stockStatus) {
             is StockStatusState.Error -> {
                 Text(
-                    "Failed to your personal data...", modifier = Modifier.padding(bottom = 12.dp)
+                    stringResource(R.string.failed_get_to_your_personal_data), modifier = Modifier.padding(bottom = 12.dp)
                 )
                 TextButton(onClick = { navController.popBackStack() }) {
-                    Text(text = "Retry")
+                    Text(text = stringResource(R.string.retry))
                 }
             }
 
@@ -136,17 +139,17 @@ fun StockDetailsContent(
 
                 if (picked != null) {
                     DataSection(
-                        title = "Your stock", data = mapOf(
-                            "Amount" to picked.amount.toString(),
-                            "Buy price" to picked.spent.toCurrencyString(),
-                            "Profit" to ((stock.price * picked.amount) - picked.spent).toCurrencyString()
+                        title = stringResource(R.string.your_stock), data = mapOf(
+                            stringResource(R.string.amount) to picked.amount.toString(),
+                            stringResource(R.string.buy_price) to picked.spent.toCurrencyString(),
+                            stringResource(R.string.profit) to ((stock.price * picked.amount) - picked.spent).toCurrencyString()
                         )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    StockButton(text = "PICK",
+                    StockButton(text = stringResource(R.string.pick),
                         onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
                     Spacer(modifier = Modifier.height(8.dp))
-                    StockButton(text = "SELL", onClick = {
+                    StockButton(text = stringResource(R.string.sell), onClick = {
                         navController.navigate(
                             Screens.Pick.withArgs(
                                 stock.symbol, true
@@ -154,15 +157,15 @@ fun StockDetailsContent(
                         )
                     })
                 } else {
-                    StockButton(text = "PICK",
+                    StockButton(text = stringResource(R.string.pick),
                         onClick = { navController.navigate(Screens.Pick.withArgs(stock.symbol)) })
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
                 if (followed != null) {
-                    StockButton(text = "Remove from watchlist", onClick = onStockUnfollow)
+                    StockButton(text = stringResource(R.string.remove_from_watchlist), onClick = onStockUnfollow)
                 } else {
-                    StockButton(text = "Add to watchlist", onClick = onStockFollow)
+                    StockButton(text = stringResource(R.string.add_to_watchlist), onClick = onStockFollow)
                 }
             }
 
@@ -170,48 +173,48 @@ fun StockDetailsContent(
         }
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "General", data = mapOf(
-                "Bid" to stock.bid.toCurrencyString(),
-                "Ask" to stock.ask.toCurrencyString(),
-                "Open" to (stock.open?.toCurrencyString() ?: "N/A"),
-                "Previous close" to stock.close.toCurrencyString(),
-                "Today's range" to "${minimumValue.toCurrencyString()} - ${maximumValue.toCurrencyString()}",
-                "52 week range" to "${stock.fiftyTwoWeekLow.toCurrencyString()} - ${stock.fiftyTwoWeekHigh.toCurrencyString()}",
-                "Analyst target price" to (stock.analystTargetPrice?.toCurrencyString() ?: "N/A"),
-                "Market cap" to stock.marketCapitalization.toCurrencyString(),
-                "Revenue" to stock.revenueTTM.toCurrencyString(),
-                "Gross profit" to stock.grossProfitTTM.toCurrencyString(),
-                "EBITDA" to stock.ebitda.toCurrencyString(),
-                "P/E ratio" to stock.pERatio,
-                "P/E/G ratio" to stock.pEGRatio,
-                "EPS" to stock.ePS,
+            title = stringResource(R.string.general), data = mapOf(
+                stringResource(R.string.bid) to stock.bid.toCurrencyString(),
+                stringResource(R.string.ask) to stock.ask.toCurrencyString(),
+                stringResource(R.string.open) to (stock.open?.toCurrencyString() ?: stringResource(R.string.not_available)),
+                stringResource(R.string.previous_close) to stock.close.toCurrencyString(),
+                stringResource(R.string.today_s_range) to "${minimumValue.toCurrencyString()} - ${maximumValue.toCurrencyString()}",
+                stringResource(R.string.fiftytwo_week_range) to "${stock.fiftyTwoWeekLow.toCurrencyString()} - ${stock.fiftyTwoWeekHigh.toCurrencyString()}",
+                stringResource(R.string.analyst_target_price) to (stock.analystTargetPrice?.toCurrencyString() ?: stringResource(R.string.not_available)),
+                stringResource(R.string.market_cap) to stock.marketCapitalization.toCurrencyString(),
+                stringResource(R.string.revenue) to stock.revenueTTM.toCurrencyString(),
+                stringResource(R.string.gross_profit) to stock.grossProfitTTM.toCurrencyString(),
+                stringResource(R.string.ebitda) to stock.ebitda.toCurrencyString(),
+                stringResource(R.string.p_e_ratio) to stock.pERatio,
+                stringResource(R.string.p_e_g_ratio) to stock.pEGRatio,
+                stringResource(R.string.eps) to stock.ePS,
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "Dividend", data = mapOf(
-                "Dividend yield" to (stock.dividendYield * 100).toPercentageString(),
-                "Dividend P/S" to stock.dividendPerShare.toCurrencyString(),
-                "Ex-dividend date" to stock.exDividendDate.toDateString(),
-                "Dividend date" to stock.dividendDate.toDateString(),
+            title = stringResource(R.string.dividend), data = mapOf(
+                stringResource(R.string.dividend_yield) to (stock.dividendYield * 100).toPercentageString(),
+                stringResource(R.string.dividend_p_s) to stock.dividendPerShare.toCurrencyString(),
+                stringResource(R.string.ex_dividend_date) to stock.exDividendDate.toDateString(),
+                stringResource(R.string.dividend_date) to stock.dividendDate.toDateString(),
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "About", data = mapOf(
-                "Symbol" to stock.symbol,
-                "Asset Type" to stock.assetType,
-                "Name" to stock.name,
-                "CIK" to stock.cIK,
-                "Exchange" to stock.exchange,
-                "Currency" to stock.currency,
-                "Country" to stock.country,
-                "Sector" to stock.sector,
-                "Industry" to stock.industry,
-                "Address" to stock.address,
-                "Fiscal Year End" to stock.fiscalYearEnd,
-                "Latest Quarter" to stock.latestQuarter.toDateString(),
-                "Description" to ""
+            title = stringResource(R.string.about), data = mapOf(
+                stringResource(R.string.symbol) to stock.symbol,
+                stringResource(R.string.asset_type) to stock.assetType,
+                stringResource(R.string.name) to stock.name,
+                stringResource(R.string.cik) to stock.cIK,
+                stringResource(R.string.exchange) to stock.exchange,
+                stringResource(R.string.currency) to stock.currency,
+                stringResource(R.string.country) to stock.country,
+                stringResource(R.string.sector) to stock.sector,
+                stringResource(R.string.industry) to stock.industry,
+                stringResource(R.string.address) to stock.address,
+                stringResource(R.string.fiscal_year_end) to stock.fiscalYearEnd,
+                stringResource(R.string.latest_quarter) to stock.latestQuarter.toDateString(),
+                stringResource(R.string.description) to String.empty()
             )
         )
         Text(
@@ -221,26 +224,26 @@ fun StockDetailsContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
         DataSection(
-            title = "Other details", data = mapOf(
-                "Fifty day moving average" to stock.fiftyDayMovingAverage.toCurrencyString(),
-                "Two hundred day moving average" to stock.twoHundredDayMovingAverage.toCurrencyString(),
-                "Shares outstanding" to stock.sharesOutstanding.toCurrencyString(),
-                "Book value" to stock.bookValue.toCurrencyString(),
-                "Revenue per share TTM" to stock.revenuePerShareTTM.toCurrencyString(),
-                "Profit margin" to stock.profitMargin.toPercentageString(),
-                "Operating margin TTM" to stock.operatingMarginTTM.toPercentageString(),
-                "Return on assets TTM" to stock.returnOnAssetsTTM.toPercentageString(),
-                "Return on equity TTM" to stock.returnOnEquityTTM.toPercentageString(),
-                "Diluted EPS TTM" to stock.dilutedEPSTTM.toCurrencyString(),
-                "Quarterly earnings growth YOY" to stock.quarterlyEarningsGrowthYOY.toPercentageString(),
-                "Quarterly revenue growth YOY" to stock.quarterlyRevenueGrowthYOY.toPercentageString(),
-                "Trailing PE" to stock.trailingPE,
-                "Forward PE" to stock.forwardPE,
-                "Price to sales ratio TTM" to stock.priceToSalesRatioTTM,
-                "Price to book ratio" to stock.priceToBookRatio,
-                "EV to revenue" to stock.eVToRevenue,
-                "EV to EBITDA" to stock.eVToEBITDA,
-                "Beta" to stock.beta,
+            title = stringResource(R.string.other_details), data = mapOf(
+                stringResource(R.string.fifty_day_moving_average) to stock.fiftyDayMovingAverage.toCurrencyString(),
+                stringResource(R.string.two_hundred_day_moving_average) to stock.twoHundredDayMovingAverage.toCurrencyString(),
+                stringResource(R.string.shares_outstanding) to stock.sharesOutstanding.toCurrencyString(),
+                stringResource(R.string.book_value) to stock.bookValue.toCurrencyString(),
+                stringResource(R.string.revenue_per_share_ttm) to stock.revenuePerShareTTM.toCurrencyString(),
+                stringResource(R.string.profit_margin) to stock.profitMargin.toPercentageString(),
+                stringResource(R.string.operating_margin_ttm) to stock.operatingMarginTTM.toPercentageString(),
+                stringResource(R.string.return_on_assets_ttm) to stock.returnOnAssetsTTM.toPercentageString(),
+                stringResource(R.string.return_on_equity_ttm) to stock.returnOnEquityTTM.toPercentageString(),
+                stringResource(R.string.diluted_eps_ttm) to stock.dilutedEPSTTM.toCurrencyString(),
+                stringResource(R.string.quarterly_earnings_growth_yoy) to stock.quarterlyEarningsGrowthYOY.toPercentageString(),
+                stringResource(R.string.quarterly_revenue_growth_yoy) to stock.quarterlyRevenueGrowthYOY.toPercentageString(),
+                stringResource(R.string.trailing_pe) to stock.trailingPE,
+                stringResource(R.string.forward_pe) to stock.forwardPE,
+                stringResource(R.string.price_to_sales_ratio_ttm) to stock.priceToSalesRatioTTM,
+                stringResource(R.string.price_to_book_ratio) to stock.priceToBookRatio,
+                stringResource(R.string.ev_to_revenue) to stock.eVToRevenue,
+                stringResource(R.string.ev_to_ebitda) to stock.eVToEBITDA,
+                stringResource(R.string.beta) to stock.beta,
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -273,10 +276,10 @@ fun StockDetailsScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Failed to fetch stock details", modifier = Modifier.padding(bottom = 12.dp)
+                        stringResource(R.string.failed_to_fetch_stock_details), modifier = Modifier.padding(bottom = 12.dp)
                     )
                     TextButton(onClick = { stockDetailsViewModel.fetch(stockSymbol) }) {
-                        Text(text = "Retry")
+                        Text(text = stringResource(R.string.retry))
                     }
                 }
             }

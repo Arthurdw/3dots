@@ -1,6 +1,7 @@
 package com.arthurdw.threedots.data
 
 import android.content.Context
+import com.arthurdw.threedots.R
 import com.arthurdw.threedots.data.database.SessionDatabase
 import com.arthurdw.threedots.data.database.SettingDatabase
 import com.arthurdw.threedots.network.ProtectedApiService
@@ -20,18 +21,17 @@ interface AppContainer {
 @OptIn(ExperimentalSerializationApi::class)
 class DefaultAppContainer(private val context: Context) : AppContainer {
     companion object {
-        const val BASE_URL = "https://3dots.xiler.net"
         const val PREFIX = "/api/v1"
     }
 
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(BASE_URL)
+        .baseUrl(context.getString(R.string.BASE_URL))
         .build()
 
     private val authorizedRetrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(BASE_URL)
+        .baseUrl(context.getString(R.string.BASE_URL))
         .client(OkHttpClient.Builder().addInterceptor(AuthInterceptor()).build())
         .build()
 
