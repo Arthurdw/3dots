@@ -7,6 +7,13 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
+/**
+ * [BarcodeAnalyser] is an [ImageAnalysis.Analyzer] used to analyze frames from the camera feed
+ * for barcode detection. When a barcode is detected, it invokes a callback with the raw value
+ * of the detected barcode.
+ *
+ * @param callback The callback function to be invoked with the raw value of the detected barcode.
+ */
 class BarcodeAnalyser(
     var callback: (String) -> Unit
 ) : ImageAnalysis.Analyzer {
