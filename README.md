@@ -42,6 +42,7 @@ To run the frontend (the Android app), follow these steps:
 ## 📸 Demo
 
 [See screenshots](./.readme_assets)
+
 [Watch a video yt](https://youtu.be/gylPxTYUeDA)
 
 ## 📝 License
