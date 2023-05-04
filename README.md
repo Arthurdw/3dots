@@ -41,17 +41,8 @@ To run the frontend (the Android app), follow these steps:
 
 ## 📸 Demo
 
-![Sign in with Google](./.readme_assets/google_sso.jpg)
-![Unlock screen](./.readme_assets/unlock.jpg)
-![Overview](./.readme_assets/overview.jpg)
-![Overview scrolled down](./.readme_assets/overview2.jpg)
-![News](./.readme_assets/news.jpg)
-![Stock search](./.readme_assets/stocks.jpg)
-![Stock details](./.readme_assets/stock.jpg)
-![Stock buy](./.readme_assets/buy_stock.jpg)
-![Share profile](./.readme_assets/share.jpg)
-![Scan profile](./.readme_assets/scan.jpg)
-![Settings](./.readme_assets/settings.jpg)
+[See screenshots](./.readme_assets)
+[Watch a video yt](https://youtu.be/gylPxTYUeDA)
 
 ## 📝 License
 
